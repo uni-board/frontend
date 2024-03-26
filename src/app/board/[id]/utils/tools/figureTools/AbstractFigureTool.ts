@@ -20,7 +20,6 @@ abstract class AbstractFigureTool<T extends fabric.Object> extends AbstractTool 
     }
 
     public enable = () : void => {
-        console.log('enable');
         this.canvas.on('mouse:down', this.startAdd())
         this.canvas.on('mouse:move', this.startDrawing());
         this.canvas.on('mouse:up', this.stopDrawing);
@@ -36,7 +35,6 @@ abstract class AbstractFigureTool<T extends fabric.Object> extends AbstractTool 
 
     protected startAdd = () : (e : IEvent) => void => {
         return ({ e } : IEvent) => {
-            console.log("start");
             this.mouseDown = true;
 
             const pointer = this.canvas.getPointer(e);
