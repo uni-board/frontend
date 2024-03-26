@@ -1,6 +1,7 @@
+import Uniboard from "@/app/board/[id]/components/Uniboard";
 
 export default function Page( { params } : { params: { id: string } } ) {
     return (
-        <h1>Страница доски</h1>
+        <Uniboard id={params.id}/>
     )
 }
