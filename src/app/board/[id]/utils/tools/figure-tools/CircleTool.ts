@@ -1,4 +1,4 @@
-import EllipseTool from "@/app/board/[id]/utils/tools/figureTools/EllipseTool";
+import EllipseTool from "@/app/board/[id]/utils/tools/figure-tools/EllipseTool";
 import {Canvas} from "fabric/fabric-impl";
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
 import {fabric} from "fabric";

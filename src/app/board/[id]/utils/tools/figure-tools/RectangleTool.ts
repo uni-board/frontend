@@ -1,21 +1,19 @@
-import AbstractFigureTool from "@/app/board/[id]/utils/tools/figureTools/AbstractFigureTool";
+import {Canvas, Rect} from "fabric/fabric-impl";
+import AbstractFigureTool from "@/app/board/[id]/utils/tools/figure-tools/AbstractFigureTool";
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
-import {Canvas} from "fabric/fabric-impl";
 import {fabric} from "fabric";
 
-export default class EllipseTool extends AbstractFigureTool<fabric.Ellipse>{
-
+export default class RectangleTool extends AbstractFigureTool<fabric.Rect> {
 
     constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController, 'ellipse');
+        super(canvas, optionsController, "rect");
     }
 
-    protected calculateSettings(pointer: { x: number; y: number }): Partial<fabric.Ellipse> {
-        let settings : Partial<fabric.Ellipse> = {
-            rx:  Math.abs(this.origX - pointer.x)/2,
-            ry: Math.abs(this.origY - pointer.y)/2,
-        };
-
+    protected calculateSettings(pointer: { x: number; y: number }): Partial<Rect> {
+        let settings : Partial<Rect> = {
+            width: Math.abs(pointer.x - this.origX),
+            height: Math.abs(pointer.y - this.origY),
+        }
 
         if (pointer.x < this.origX) {
             settings.left = pointer.x;
@@ -28,16 +26,16 @@ export default class EllipseTool extends AbstractFigureTool<fabric.Ellipse>{
         return settings;
     }
 
-    protected initFigure(): fabric.Ellipse {
-        return new fabric.Ellipse({
+    protected initFigure(pointer: {x: number, y: number}): Rect {
+        return new fabric.Rect({
             stroke: this.optionsController.options.currentColor,
             strokeWidth: this.optionsController.options.currentWidth,
             fill: this.optionsController.options.fill ? this.optionsController.options.currentColor : 'transparent',
             left: this.origX,
             top: this.origY,
-            rx: 0,
-            ry: 0,
+            width: 0,
+            height: 0,
             selectable: false,
-        })
+        });
     }
 }

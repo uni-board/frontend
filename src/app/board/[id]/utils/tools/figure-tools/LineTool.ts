@@ -1,6 +1,6 @@
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
 import {Canvas, Line} from "fabric/fabric-impl";
-import AbstractFigureTool from "@/app/board/[id]/utils/tools/figureTools/AbstractFigureTool";
+import AbstractFigureTool from "@/app/board/[id]/utils/tools/figure-tools/AbstractFigureTool";
 import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 import {fabric} from "fabric";
 

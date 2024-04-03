@@ -4,8 +4,9 @@ import AbstractTool from "@/app/board/[id]/utils/tools/AbstractTool";
 import {IEvent} from "fabric/fabric-impl";
 import {v4 as uuidv4} from "uuid";
 import {fabric} from "fabric";
+import SwitchableTool from "@/app/board/[id]/utils/tools/marker-intefaces/SwitchableTool";
 
-abstract class AbstractFigureTool<T extends fabric.Object> extends AbstractTool {
+abstract class AbstractFigureTool<T extends fabric.Object> extends AbstractTool implements SwitchableTool {
 
     protected origX : number = 0;
     protected origY : number = 0;

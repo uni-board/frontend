@@ -1,23 +1,26 @@
-import AbstractFigureTool from "@/app/board/[id]/utils/tools/figureTools/AbstractFigureTool";
-import {Canvas, Triangle} from "fabric/fabric-impl";
+import AbstractFigureTool from "@/app/board/[id]/utils/tools/figure-tools/AbstractFigureTool";
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
+import {Canvas} from "fabric/fabric-impl";
 import {fabric} from "fabric";
 
-export default class TriangleTool extends AbstractFigureTool<fabric.Triangle>{
+export default class EllipseTool extends AbstractFigureTool<fabric.Ellipse>{
 
 
     constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController, 'triangle');
+        super(canvas, optionsController, 'ellipse');
     }
 
-    protected calculateSettings(pointer: { x: number; y: number }): Partial<Triangle> {
-        let settings : Partial<Triangle> = {
-            width: Math.abs(pointer.x - this.origX),
-            height: Math.abs(pointer.y - this.origY),
-        }
+    protected calculateSettings(pointer: { x: number; y: number }): Partial<fabric.Ellipse> {
+        let settings : Partial<fabric.Ellipse> = {
+            rx:  Math.abs(this.origX - pointer.x)/2,
+            ry: Math.abs(this.origY - pointer.y)/2,
+        };
+
+
         if (pointer.x < this.origX) {
             settings.left = pointer.x;
         }
+
         if (pointer.y < this.origY) {
             settings.top = pointer.y;
         }
@@ -25,16 +28,16 @@ export default class TriangleTool extends AbstractFigureTool<fabric.Triangle>{
         return settings;
     }
 
-    protected initFigure(): Triangle {
-        return new fabric.Triangle({
+    protected initFigure(): fabric.Ellipse {
+        return new fabric.Ellipse({
             stroke: this.optionsController.options.currentColor,
             strokeWidth: this.optionsController.options.currentWidth,
             fill: this.optionsController.options.fill ? this.optionsController.options.currentColor : 'transparent',
             left: this.origX,
             top: this.origY,
-            width: 0,
-            height: 0,
+            rx: 0,
+            ry: 0,
             selectable: false,
-        });
+        })
     }
 }
