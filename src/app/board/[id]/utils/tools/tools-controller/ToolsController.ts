@@ -10,9 +10,12 @@ import AbstractTool from "@/app/board/[id]/utils/tools/AbstractTool";
 import DrawingTool from "@/app/board/[id]/utils/tools/DrawingTool";
 import SelectTool from "@/app/board/[id]/utils/tools/SelectTool";
 import TextboxTool from "@/app/board/[id]/utils/tools/oneclick-tools/TextBoxTool";
+import AlwaysActiveTool from "@/app/board/[id]/utils/tools/marker-intefaces/AlwaysActiveTool";
+import DeleteTool from "@/app/board/[id]/utils/tools/DeleteTool";
 
 export default class ToolsController {
     switchableTools: SwitchableTools
+    alwaysActiveTools: AlwaysActiveTool
 
     private canvas: fabric.Canvas;
     private optionsController: OptionsController;
@@ -31,6 +34,17 @@ export default class ToolsController {
             textbox: new TextboxTool(this.canvas, this.optionsController,
                 () => this.switchOn('select')),
         }
+
+        this.alwaysActiveTools = {
+            delete: new DeleteTool(this.canvas, this.optionsController),
+        }
+
+        this.enableAlwaysActiveTools();
+    }
+
+    private enableAlwaysActiveTools = () : void => {
+        Object.values(this.alwaysActiveTools)
+            .forEach((v: AbstractTool) => v.enable());
     }
 
     public switchOn(tool: keyof SwitchableTools) {
@@ -45,5 +59,8 @@ export default class ToolsController {
 
     public off = () => {
         this.disableAll();
+
+        Object.values(this.alwaysActiveTools)
+            .forEach((v: AbstractTool) => v.disable());
     }
 }
