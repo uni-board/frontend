@@ -1,7 +1,8 @@
+import {MutableRefObject} from "react";
 
-export default function Canvas({ id } : { id: string}) {
+export default function Canvas({ id, canvasContainerRef } : { id: string, canvasContainerRef: MutableRefObject<null>}) {
     return (
-        <div className={"w-screen h-screen"}>
+        <div ref={canvasContainerRef} className={"w-screen h-screen"}>
             <canvas id={id}/>
         </div>
     );
