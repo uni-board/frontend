@@ -12,6 +12,7 @@ import SelectTool from "@/app/board/[id]/utils/tools/SelectTool";
 import TextboxTool from "@/app/board/[id]/utils/tools/oneclick-tools/TextBoxTool";
 import AlwaysActiveTool from "@/app/board/[id]/utils/tools/marker-intefaces/AlwaysActiveTool";
 import DeleteTool from "@/app/board/[id]/utils/tools/DeleteTool";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 
 export default class ToolsController {
     switchableTools: SwitchableTools
@@ -20,23 +21,23 @@ export default class ToolsController {
     private canvas: fabric.Canvas;
     private optionsController: OptionsController;
 
-    constructor(canvas: fabric.Canvas, optionsController: OptionsController) {
+    constructor(canvas: fabric.Canvas, optionsController: OptionsController, socketController: SocketController) {
         this.canvas = canvas;
         this.optionsController = optionsController;
         this.switchableTools = {
-            rectangle: new RectangleTool(this.canvas, this.optionsController),
-            triangle: new TriangleTool(this.canvas, this.optionsController),
-            line: new LineTool(this.canvas, this.optionsController),
-            ellipse: new EllipseTool(this.canvas, this.optionsController),
-            circle: new CircleTool(this.canvas, this.optionsController),
-            drawing: new DrawingTool(this.canvas, this.optionsController),
-            select: new SelectTool(this.canvas, this.optionsController),
+            rectangle: new RectangleTool(this.canvas, this.optionsController, socketController),
+            triangle: new TriangleTool(this.canvas, this.optionsController, socketController),
+            line: new LineTool(this.canvas, this.optionsController, socketController),
+            ellipse: new EllipseTool(this.canvas, this.optionsController, socketController),
+            circle: new CircleTool(this.canvas, this.optionsController, socketController),
+            drawing: new DrawingTool(this.canvas, this.optionsController, socketController),
+            select: new SelectTool(this.canvas, this.optionsController, socketController),
             textbox: new TextboxTool(this.canvas, this.optionsController,
-                () => this.switchOn('select')),
+                () => this.switchOn('select'), socketController),
         }
 
         this.alwaysActiveTools = {
-            delete: new DeleteTool(this.canvas, this.optionsController),
+            delete: new DeleteTool(this.canvas, this.optionsController, socketController),
         }
 
         this.enableAlwaysActiveTools();

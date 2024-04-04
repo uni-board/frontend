@@ -2,12 +2,13 @@ import AbstractFigureTool from "@/app/board/[id]/utils/tools/figure-tools/Abstra
 import {Canvas, Triangle} from "fabric/fabric-impl";
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
 import {fabric} from "fabric";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 
 export default class TriangleTool extends AbstractFigureTool<fabric.Triangle>{
 
 
-    constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController, 'triangle');
+    constructor(canvas: Canvas, optionsController: OptionsController, socketController: SocketController) {
+        super(canvas, optionsController, 'triangle', socketController);
     }
 
     protected calculateSettings(pointer: { x: number; y: number }): Partial<Triangle> {

@@ -6,8 +6,8 @@ import {fabric} from "fabric";
 
 export default class LineTool extends AbstractFigureTool<fabric.Line>{
 
-    constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController, 'line');
+    constructor(canvas: Canvas, optionsController: OptionsController, socketController: SocketController) {
+        super(canvas, optionsController, 'line', socketController);
     }
 
     protected calculateSettings(pointer: { x: number; y: number }): Partial<Line> {

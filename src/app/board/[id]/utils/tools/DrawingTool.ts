@@ -5,13 +5,14 @@ import {fabric} from "fabric";
 import UniboardData from "@/app/board/[id]/utils/tools/UniboardData";
 import {v4 as uuidv4} from "uuid";
 import SwitchableTool from "@/app/board/[id]/utils/tools/marker-intefaces/SwitchableTool";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 
 export default class DrawingTool extends AbstractTool implements SwitchableTool{
 
     protected type: string;
 
-    constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController);
+    constructor(canvas: Canvas, optionsController: OptionsController, socketController: SocketController) {
+        super(canvas, optionsController, socketController);
         this.type = 'path';
     }
 
@@ -37,6 +38,7 @@ export default class DrawingTool extends AbstractTool implements SwitchableTool{
                     }
                 });
                 this.canvas.add(newObject);
+                this.socketController.objectCreated(newObject);
             }
         })
     }

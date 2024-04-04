@@ -4,11 +4,12 @@ import {Canvas} from "fabric/fabric-impl";
 import AbstractOneClickTool from "@/app/board/[id]/utils/tools/oneclick-tools/AbstractOneClickTool";
 import {v4 as uuidv4} from "uuid";
 import {fabric} from "fabric";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 
 class TextboxTool extends AbstractOneClickTool {
 
-    constructor(canvas: Canvas, optionsController: OptionsController, enableDefaultTool: () => void) {
-        super(canvas, optionsController, enableDefaultTool);
+    constructor(canvas: Canvas, optionsController: OptionsController, enableDefaultTool: () => void, socketController: SocketController) {
+        super(canvas, optionsController, enableDefaultTool, socketController);
     }
 
     protected createObject(pointer : {x: number, y: number}) : fabric.Textbox & UniboardData {

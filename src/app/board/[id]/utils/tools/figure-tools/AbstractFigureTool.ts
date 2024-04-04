@@ -5,6 +5,7 @@ import {IEvent} from "fabric/fabric-impl";
 import {v4 as uuidv4} from "uuid";
 import {fabric} from "fabric";
 import SwitchableTool from "@/app/board/[id]/utils/tools/marker-intefaces/SwitchableTool";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 
 abstract class AbstractFigureTool<T extends fabric.Object> extends AbstractTool implements SwitchableTool {
 
@@ -15,8 +16,9 @@ abstract class AbstractFigureTool<T extends fabric.Object> extends AbstractTool 
     protected type: string;
 
     protected mouseDown : boolean = false;
-    protected constructor(canvas: fabric.Canvas, optionsController: OptionsController, type: string) {
-        super(canvas, optionsController);
+
+    protected constructor(canvas: fabric.Canvas, optionsController: OptionsController, type: string, socketController: SocketController) {
+        super(canvas, optionsController, socketController);
         this.type = type;
     }
 
@@ -78,7 +80,7 @@ abstract class AbstractFigureTool<T extends fabric.Object> extends AbstractTool 
     protected stopDrawing = () => {
         this.mouseDown = false;
         if (this.drawInstance) {
-            //this.socketController.objectCreated(this.drawInstance);
+            this.socketController.objectCreated(this.drawInstance);
         }
     }
 

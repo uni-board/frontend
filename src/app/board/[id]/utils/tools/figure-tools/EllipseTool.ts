@@ -2,12 +2,13 @@ import AbstractFigureTool from "@/app/board/[id]/utils/tools/figure-tools/Abstra
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
 import {Canvas} from "fabric/fabric-impl";
 import {fabric} from "fabric";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 
 export default class EllipseTool extends AbstractFigureTool<fabric.Ellipse>{
 
 
-    constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController, 'ellipse');
+    constructor(canvas: Canvas, optionsController: OptionsController, socketController: SocketController) {
+        super(canvas, optionsController, 'ellipse', socketController);
     }
 
     protected calculateSettings(pointer: { x: number; y: number }): Partial<fabric.Ellipse> {

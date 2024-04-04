@@ -3,8 +3,10 @@ import {Canvas} from "fabric/fabric-impl";
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
 import {fabric} from "fabric";
 import KeysController from "@/app/board/[id]/utils/helpers/KeysController";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
+import AlwaysActiveTool from "@/app/board/[id]/utils/tools/marker-intefaces/AlwaysActiveTool";
 
-export default class DeleteTool extends AbstractTool {
+export default class DeleteTool extends AbstractTool implements AlwaysActiveTool{
 
     private deleteCallback = (e : KeyboardEvent) => {
         let key = new KeysController();
@@ -18,10 +20,13 @@ export default class DeleteTool extends AbstractTool {
 
             this.canvas.remove(...objects);
             this.canvas.discardActiveObject();
+            objects.forEach((obj) => {
+                this.socketController.objectRemoved(obj);
+            })
         }
     }
-    constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController);
+    constructor(canvas: Canvas, optionsController: OptionsController, socketController: SocketController) {
+        super(canvas, optionsController, socketController);
     }
 
     disable(): void {

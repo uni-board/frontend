@@ -2,11 +2,12 @@ import {Canvas, Rect} from "fabric/fabric-impl";
 import AbstractFigureTool from "@/app/board/[id]/utils/tools/figure-tools/AbstractFigureTool";
 import OptionsController from "@/app/board/[id]/utils/options/OptionsController";
 import {fabric} from "fabric";
+import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 
 export default class RectangleTool extends AbstractFigureTool<fabric.Rect> {
 
-    constructor(canvas: Canvas, optionsController: OptionsController) {
-        super(canvas, optionsController, "rect");
+    constructor(canvas: Canvas, optionsController: OptionsController, socketController: SocketController) {
+        super(canvas, optionsController, "rect", socketController);
     }
 
     protected calculateSettings(pointer: { x: number; y: number }): Partial<Rect> {
