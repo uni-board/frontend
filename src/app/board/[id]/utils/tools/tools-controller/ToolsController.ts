@@ -10,13 +10,14 @@ import AbstractTool from "@/app/board/[id]/utils/tools/AbstractTool";
 import DrawingTool from "@/app/board/[id]/utils/tools/DrawingTool";
 import SelectTool from "@/app/board/[id]/utils/tools/SelectTool";
 import TextboxTool from "@/app/board/[id]/utils/tools/oneclick-tools/TextBoxTool";
-import AlwaysActiveTool from "@/app/board/[id]/utils/tools/marker-intefaces/AlwaysActiveTool";
 import DeleteTool from "@/app/board/[id]/utils/tools/DeleteTool";
 import SocketController from "@/app/board/[id]/utils/socket/SocketController";
+import AlwaysActiveTools from "@/app/board/[id]/utils/tools/tools-controller/AlwaysActiveTools";
+import ScalingTool from "@/app/board/[id]/utils/tools/ScalingTool";
 
 export default class ToolsController {
     switchableTools: SwitchableTools
-    alwaysActiveTools: AlwaysActiveTool
+    alwaysActiveTools: AlwaysActiveTools
 
     private canvas: fabric.Canvas;
     private optionsController: OptionsController;
@@ -38,6 +39,7 @@ export default class ToolsController {
 
         this.alwaysActiveTools = {
             delete: new DeleteTool(this.canvas, this.optionsController, socketController),
+            scaling: new ScalingTool(this.canvas, this.optionsController, socketController),
         }
 
         this.enableAlwaysActiveTools();
