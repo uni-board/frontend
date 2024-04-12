@@ -1,0 +1,11 @@
+.background {
+    border-radius: 25% 0 25% 0;
+    @apply aspect-square bg-white flex justify-center items-center
+}
+
+.inner {
+    width: 80%;
+    height: 80%;
+    box-sizing: border-box;
+    position: relative;
+}

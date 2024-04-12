@@ -1,0 +1,18 @@
+.presentation {
+    height: 582px;
+    background-color: #F2F2F2;
+    @apply flex justify-center items-center;
+}
+
+.content {
+    max-width: 984px;
+    flex-grow: 1;
+    @apply flex justify-center
+}
+
+.video {
+    max-width: 756px;
+    flex-grow: 1;
+    aspect-ratio: 756/491;
+    @apply relative
+}

@@ -1,0 +1,12 @@
+.footer {
+    padding: 38px 60px;
+    background-color: black;
+    @apply flex items-center;
+}
+
+.uniboard {
+    font-family: "Caudex", serif;
+    color: white;
+    font-size: 32px;
+    margin-left: 5px;
+}

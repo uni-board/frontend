@@ -1,0 +1,6 @@
+.wrapper {
+    background-color: #58BD6A;
+    height: 520px;
+    @apply w-full flex justify-center flex-col items-center
+
+}
