@@ -14,6 +14,7 @@ import DeleteTool from "@/app/board/[id]/utils/tools/DeleteTool";
 import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 import AlwaysActiveTools from "@/app/board/[id]/utils/tools/tools-controller/AlwaysActiveTools";
 import ScalingTool from "@/app/board/[id]/utils/tools/ScalingTool";
+import DragAndDropTool from "@/app/board/[id]/utils/tools/DragAndDropTool";
 
 export default class ToolsController {
     switchableTools: SwitchableTools
@@ -40,6 +41,7 @@ export default class ToolsController {
         this.alwaysActiveTools = {
             delete: new DeleteTool(this.canvas, this.optionsController, socketController),
             scaling: new ScalingTool(this.canvas, this.optionsController, socketController),
+            dragAndDrop: new DragAndDropTool(this.canvas, this.optionsController, socketController, () => this.switchOn('select')),
         }
 
         this.enableAlwaysActiveTools();

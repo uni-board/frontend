@@ -4,6 +4,8 @@ import {fabric} from "fabric";
 import SwitchableTools from "@/app/board/[id]/utils/tools/tools-controller/SwitchableTools";
 import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 import SocketIOModel from "@/app/board/[id]/utils/socket/SocketIOModel";
+import {hasUniboardData} from "@/app/board/[id]/utils/tools/UniboardData";
+import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
 
 export default class UniboardUtil {
     private readonly id : string;
@@ -127,7 +129,15 @@ export default class UniboardUtil {
 
     private createObject(objects: any[]) {
         fabric.util.enlivenObjects(objects, (enlivenedObjects: fabric.Object[]) => {
-            enlivenedObjects.forEach((enlivenedObject: fabric.Object) => {
+            enlivenedObjects.forEach( async (enlivenedObject: fabric.Object) => {
+                if (!hasUniboardData(enlivenedObject)) {
+                    throw new Error("Некорректный тип объекта!!!")
+                }
+
+                if (enlivenedObject.uniboardData.type == "uniboard/svg") {
+                    enlivenedObject = await SVGUtil.enlivenFromObject(enlivenedObject);
+                }
+
                 if (this.canvas.getContext()) {
                     this.canvas.add(enlivenedObject);
                 }
