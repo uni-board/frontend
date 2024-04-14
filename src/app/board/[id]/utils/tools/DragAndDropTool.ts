@@ -6,6 +6,7 @@ import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 import {fabric} from "fabric";
 import UniboardData from "@/app/board/[id]/utils/tools/UniboardData";
 import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
+import ImageUtil from "@/app/board/[id]/utils/files/ImageUtil";
 
 export default class DragAndDropTool extends AbstractTool implements AlwaysActiveTool {
 
@@ -47,6 +48,11 @@ export default class DragAndDropTool extends AbstractTool implements AlwaysActiv
             case 'image/svg+xml': {
                 obj = await SVGUtil.createFromFile(file);
                 break;
+            }
+            case 'image/jpeg':
+            case 'image/png': {
+                obj = await ImageUtil.createFromFile(file);
+                break
             }
             default: throw new Error("Недопустимый тип файла");
         }
