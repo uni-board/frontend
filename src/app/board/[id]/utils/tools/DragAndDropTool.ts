@@ -7,6 +7,7 @@ import {fabric} from "fabric";
 import UniboardData from "@/app/board/[id]/utils/tools/UniboardData";
 import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
 import ImageUtil from "@/app/board/[id]/utils/files/ImageUtil";
+import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
 
 export default class DragAndDropTool extends AbstractTool implements AlwaysActiveTool {
 
@@ -54,7 +55,9 @@ export default class DragAndDropTool extends AbstractTool implements AlwaysActiv
                 obj = await ImageUtil.createFromFile(file);
                 break
             }
-            default: throw new Error("Недопустимый тип файла");
+            default: {
+                obj = await FilesUtil.createFromFile(file);
+            }
         }
 
         obj.set({

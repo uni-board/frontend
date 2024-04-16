@@ -7,6 +7,7 @@ import SocketIOModel from "@/app/board/[id]/utils/socket/SocketIOModel";
 import UniboardData, {hasUniboardData} from "@/app/board/[id]/utils/tools/UniboardData";
 import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
 import ImageUtil from "@/app/board/[id]/utils/files/ImageUtil";
+import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
 
 export default class UniboardUtil {
     private readonly id : string;
@@ -44,6 +45,7 @@ export default class UniboardUtil {
         fabric.Object.prototype.borderDashArray = [5, 5];
         fabric.Object.prototype.perPixelTargetFind = false;
         fabric.Object.prototype.includeDefaultValues = false;
+        fabric.Object.prototype.objectCaching = false;
     }
 
     private handleModifications = () => {
@@ -143,6 +145,10 @@ export default class UniboardUtil {
 
                 if (obj.uniboardData.type == "uniboard/image") {
                     obj = await ImageUtil.enlivenFromObject(obj);
+                }
+
+                if (obj.uniboardData.type == "uniboard/file") {
+                    obj = await FilesUtil.enlivenFromObject(obj);
                 }
 
                 if (this.canvas.getContext()) {
