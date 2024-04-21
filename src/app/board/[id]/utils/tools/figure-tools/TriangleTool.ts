@@ -28,9 +28,9 @@ export default class TriangleTool extends AbstractFigureTool<fabric.Triangle>{
 
     protected initFigure(): Triangle {
         return new fabric.Triangle({
-            stroke: this.optionsController.options.currentColor,
-            strokeWidth: this.optionsController.options.currentWidth,
-            fill: this.optionsController.options.fill ? this.optionsController.options.currentColor : 'transparent',
+            stroke: this.optionsController.get("currentColor"),
+            strokeWidth: this.optionsController.get("currentWidth"),
+            fill: this.optionsController.get("fill") ? this.optionsController.get("currentColor") : 'transparent',
             left: this.origX,
             top: this.origY,
             width: 0,

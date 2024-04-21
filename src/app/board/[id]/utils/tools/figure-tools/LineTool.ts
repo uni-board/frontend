@@ -19,8 +19,8 @@ export default class LineTool extends AbstractFigureTool<fabric.Line>{
 
     protected initFigure = (pointer: {x: number, y: number}): Line => {
         return new fabric.Line([pointer.x, pointer.y, pointer.x, pointer.y], {
-            strokeWidth: this.optionsController.options.currentWidth,
-            stroke: this.optionsController.options.currentColor,
+            strokeWidth: this.optionsController.get("currentWidth"),
+            stroke: this.optionsController.get("currentColor"),
             selectable: false,
         });
     }

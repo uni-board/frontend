@@ -22,7 +22,7 @@ export default class DrawingTool extends AbstractTool implements SwitchableTool{
     }
 
     enable(): void {
-        this.canvas.freeDrawingBrush.width = parseInt(this.optionsController.options.currentWidth + "", 10) || 1;
+        this.canvas.freeDrawingBrush.width = this.optionsController.get("currentWidth");
         this.canvas.isDrawingMode = true;
         this.canvas.on("path:created", (e : IEvent) => {
             // @ts-ignore

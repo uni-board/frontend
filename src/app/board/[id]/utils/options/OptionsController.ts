@@ -1,7 +1,7 @@
 import ToolsOptions from "@/app/board/[id]/utils/options/ToolsOptions";
 
 export default class OptionsController {
-    public readonly options: ToolsOptions;
+    private readonly options: ToolsOptions;
 
     constructor() {
         this.options = {
@@ -12,4 +12,11 @@ export default class OptionsController {
         };
     }
 
+    public set<K extends keyof ToolsOptions>(key : K, value : ToolsOptions[K]) : void {
+        this.options[key] = value;
+    }
+
+    public get<K extends keyof ToolsOptions>(key: K) : ToolsOptions[K] {
+        return this.options[key];
+    }
 }

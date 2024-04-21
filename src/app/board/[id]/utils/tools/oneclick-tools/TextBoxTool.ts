@@ -16,7 +16,7 @@ class TextboxTool extends AbstractOneClickTool {
         const text : fabric.Textbox & UniboardData = Object.assign(new fabric.Textbox('text', {
             left: pointer.x,
             top: pointer.y,
-            fill: this.optionsController.options.currentColor,
+            fill: this.optionsController.get("currentColor"),
             fontFamily: "Arial",
             editable: true,
         }), {

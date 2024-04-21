@@ -31,9 +31,9 @@ export default class EllipseTool extends AbstractFigureTool<fabric.Ellipse>{
 
     protected initFigure(): fabric.Ellipse {
         return new fabric.Ellipse({
-            stroke: this.optionsController.options.currentColor,
-            strokeWidth: this.optionsController.options.currentWidth,
-            fill: this.optionsController.options.fill ? this.optionsController.options.currentColor : 'transparent',
+            stroke: this.optionsController.get("currentColor"),
+            strokeWidth: this.optionsController.get("currentWidth"),
+            fill: this.optionsController.get("fill") ? this.optionsController.get("currentColor") : 'transparent',
             left: this.origX,
             top: this.origY,
             rx: 0,

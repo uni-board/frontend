@@ -15,7 +15,7 @@ export default class StickyNoteTool extends AbstractOneClickTool implements Swit
 
     protected async createObject(pointer: { x: number; y: number }): Promise<Object & UniboardData> {
         return new Promise( async (resolve, reject) => {
-            let stickyNote = await StickyNoteUtil.create(this.optionsController.options.stickerColor);
+            let stickyNote = await StickyNoteUtil.create(this.optionsController.get("stickerColor"));
             stickyNote.set({
                 left: pointer.x,
                 top: pointer.y,
