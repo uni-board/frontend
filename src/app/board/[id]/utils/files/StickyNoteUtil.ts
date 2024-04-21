@@ -220,7 +220,6 @@ export default class StickyNoteUtil {
     }
 
     private static resizeFont(stickyNote: StickyNote) {
-        console.log("resize");
         let textBox = stickyNote.textbox;
         let group = stickyNote.sticker;
 
@@ -278,8 +277,10 @@ export default class StickyNoteUtil {
 
             textBox.set({ fontSize: newfontSize });
         }
-        // @ts-ignore
-        stickyNote.sticker.canvas.renderAll();
+
+        if (stickyNote.sticker.canvas) {
+            stickyNote.sticker.canvas.renderAll();
+        }
     }
 
     private static addUniboardData(stickyNote: StickyNote, color: "black" | "blue" | "green" | "red" | "yellow")  {
@@ -303,6 +304,10 @@ export default class StickyNoteUtil {
             }
             const stickyNote = await this.createStickyNoteWithoutUniboardData(object.uniboardData.stickerColor);
             stickyNote.sticker.set(object.toObject());
+            stickyNote.textbox.set({
+                text: object.uniboardData.stickerText,
+            })
+            this.resizeFont(stickyNote);
             resolve(Object.assign(stickyNote.sticker, {
                 uniboardData: object.uniboardData,
             }));

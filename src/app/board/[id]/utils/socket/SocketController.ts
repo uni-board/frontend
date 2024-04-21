@@ -11,7 +11,7 @@ export default class SocketController {
 
     public objectCreated(object: fabric.Object) {
 
-        let obj = object.toDatalessObject(["uniboardData"])
+        let obj = object.toDatalessObject(["uniboardData", "selectable"])
         if (this.isFileObject(obj)) {
             let {objects, src, ...other} = obj;
             obj = other;
@@ -21,7 +21,7 @@ export default class SocketController {
     }
 
     public objectModified(object : fabric.Object) {
-        let obj = object.toObject(["uniboardData"]);
+        let obj = object.toObject(["uniboardData", "selectable"]);
         if (object instanceof fabric.Path) {
             let {path, ...other} = obj;
             obj = other;
