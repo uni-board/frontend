@@ -7,6 +7,7 @@ import CircleTool from "@/app/board/[id]/utils/tools/figure-tools/CircleTool";
 import DrawingTool from "@/app/board/[id]/utils/tools/DrawingTool";
 import SelectTool from "@/app/board/[id]/utils/tools/SelectTool";
 import TextboxTool from "@/app/board/[id]/utils/tools/oneclick-tools/TextBoxTool";
+import StickyNoteTool from "@/app/board/[id]/utils/tools/oneclick-tools/StickyNoteTool";
 
 interface SwitchableTools {
     rectangle: RectangleTool & SwitchableTool,
@@ -17,6 +18,7 @@ interface SwitchableTools {
     drawing: DrawingTool & SwitchableTool,
     select: SelectTool & SwitchableTool,
     textbox: TextboxTool & SwitchableTool,
+    stickyNote: StickyNoteTool & SwitchableTool,
 }
 
 export default SwitchableTools;

@@ -4,6 +4,7 @@ import AbstractTool from "@/app/board/[id]/utils/tools/AbstractTool";
 import {Canvas, IEvent} from "fabric/fabric-impl";
 import UniboardData from "@/app/board/[id]/utils/tools/UniboardData";
 import SocketController from "@/app/board/[id]/utils/socket/SocketController";
+import {fabric} from "fabric";
 
 abstract class AbstractOneClickTool extends AbstractTool implements SwitchableTool{
     enableDefaultTool : () => void;
@@ -22,10 +23,10 @@ abstract class AbstractOneClickTool extends AbstractTool implements SwitchableTo
         this.canvas.on('mouse:down', this.add)
     }
 
-    protected add = ({e} : IEvent) => {
+    protected add = async ({e} : IEvent) => {
         const pointer = this.canvas.getPointer(e);
 
-        const text = this.createObject(pointer);
+        const text = await this.createObject(pointer);
 
         this.canvas.add(text);
         this.disable();
@@ -33,7 +34,7 @@ abstract class AbstractOneClickTool extends AbstractTool implements SwitchableTo
         this.socketController.objectCreated(text);
     };
 
-    protected abstract createObject(pointer : {x: number, y: number}) : fabric.Object & UniboardData;
+    protected abstract createObject(pointer : {x: number, y: number}) : Promise<fabric.Object & UniboardData>;
 
 
 }

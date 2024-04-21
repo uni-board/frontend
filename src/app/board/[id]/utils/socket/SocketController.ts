@@ -10,7 +10,14 @@ export default class SocketController {
     }
 
     public objectCreated(object: fabric.Object) {
-        this.model.created(JSON.stringify(object.toDatalessObject(["uniboardData"])))
+
+        let obj = object.toDatalessObject(["uniboardData"])
+        if (this.isFileObject(obj)) {
+            let {objects, src, ...other} = obj;
+            obj = other;
+        }
+
+        this.model.created(JSON.stringify(obj));
     }
 
     public objectModified(object : fabric.Object) {
@@ -20,7 +27,17 @@ export default class SocketController {
             obj = other;
         }
 
+        if (this.isFileObject(obj)) {
+            let {objects, src, ...other} = obj;
+            obj = other;
+        }
+
         this.model.modified(JSON.stringify(obj));
+    }
+
+    private isFileObject(obj: any) {
+        const fileObjects = ["uniboard/file", "uniboard/image", "uniboard/svg", "uniboard/stickyNote"];
+        return fileObjects.includes(obj.uniboardData.type);
     }
 
     public objectRemoved(object: fabric.Object) {

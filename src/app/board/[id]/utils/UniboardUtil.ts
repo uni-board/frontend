@@ -4,6 +4,11 @@ import {fabric} from "fabric";
 import SwitchableTools from "@/app/board/[id]/utils/tools/tools-controller/SwitchableTools";
 import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 import SocketIOModel from "@/app/board/[id]/utils/socket/SocketIOModel";
+import UniboardData, {hasUniboardData} from "@/app/board/[id]/utils/tools/UniboardData";
+import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
+import ImageUtil from "@/app/board/[id]/utils/files/ImageUtil";
+import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
+import StickyNoteUtil from "@/app/board/[id]/utils/files/StickyNoteUtil";
 
 export default class UniboardUtil {
     private readonly id : string;
@@ -41,6 +46,7 @@ export default class UniboardUtil {
         fabric.Object.prototype.borderDashArray = [5, 5];
         fabric.Object.prototype.perPixelTargetFind = false;
         fabric.Object.prototype.includeDefaultValues = false;
+        fabric.Object.prototype.objectCaching = false;
     }
 
     private handleModifications = () => {
@@ -57,14 +63,17 @@ export default class UniboardUtil {
                             const tempTop = obj.top;
                             obj.left = canvasObject.left + (canvasObject.width / 2) + obj.left;
                             obj.top = canvasObject.top + (canvasObject.height / 2) + obj.top;
-                            this.socketController.objectModified(obj);
+                            if (hasUniboardData(canvasObject)) {
+                                this.socketController.objectModified(obj);
+                            }
                             obj.left = tempLeft;
                             obj.top = tempTop;
                         }
-
                     })
                 } else {
-                    this.socketController.objectModified(canvasObject);
+                    if (hasUniboardData(canvasObject)) {
+                        this.socketController.objectModified(canvasObject);
+                    }
                 }
             }
         });
@@ -80,6 +89,16 @@ export default class UniboardUtil {
             .getObjects()
             // @ts-ignore
             .find((value) => value.uniboardData.id === obj.uniboardData.id);
+
+        if (obj.uniboardData.type == "uniboard/stickyNote") {
+            if (objOnCanvas instanceof fabric.Group) {
+                let textbox = objOnCanvas.getObjects('textbox')[0];
+                if (textbox instanceof fabric.Textbox) {
+                    textbox.set("text", obj.uniboardData.stickerText);
+                    textbox.fire('changed');
+                }
+            }
+        }
 
         if (objOnCanvas) {
             objOnCanvas.set(obj)
@@ -127,9 +146,31 @@ export default class UniboardUtil {
 
     private createObject(objects: any[]) {
         fabric.util.enlivenObjects(objects, (enlivenedObjects: fabric.Object[]) => {
-            enlivenedObjects.forEach((enlivenedObject: fabric.Object) => {
+            enlivenedObjects.forEach( async (enlivenedObject: fabric.Object) => {
+                if (!hasUniboardData(enlivenedObject)) {
+                    throw new Error("Некорректный тип объекта!!!");
+                }
+
+                let obj : fabric.Object & UniboardData = enlivenedObject;
+
+                if (obj.uniboardData.type == "uniboard/svg") {
+                    obj = await SVGUtil.enlivenFromObject(obj);
+                }
+
+                if (obj.uniboardData.type == "uniboard/image") {
+                    obj = await ImageUtil.enlivenFromObject(obj);
+                }
+
+                if (obj.uniboardData.type == "uniboard/file") {
+                    obj = await FilesUtil.enlivenFromObject(obj);
+                }
+
+                if (obj.uniboardData.type == "uniboard/stickyNote") {
+                    obj = await StickyNoteUtil.enlivenFromObject(obj);
+                }
+
                 if (this.canvas.getContext()) {
-                    this.canvas.add(enlivenedObject);
+                    this.canvas.add(obj);
                 }
             })
         }, "fabric");

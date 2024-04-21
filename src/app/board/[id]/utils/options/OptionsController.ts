@@ -8,6 +8,7 @@ export default class OptionsController {
             currentColor: '#ff5900',
             currentWidth: 5,
             fill: false,
+            stickerColor: "yellow",
         };
     }
 

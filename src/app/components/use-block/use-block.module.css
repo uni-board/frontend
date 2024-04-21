@@ -1,0 +1,63 @@
+.use_block {
+    background-color: white;
+    padding: 45px 0;
+}
+
+.content {
+    max-width: 984px;
+    margin: auto;
+    @apply flex justify-center
+}
+
+.call_to_action_block {
+    width: 75%;
+    padding: 54px;
+    background: linear-gradient(#F39200, #FFC266);
+    border-radius: 12px;
+    color: white;
+    @apply flex justify-center items-center flex-col;
+}
+
+.header {
+    font-weight: bolder;
+    font-size: 32px;
+    line-height: normal;
+}
+
+.text {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: normal;
+}
+
+.button {
+    margin-top: 24px;
+    padding: 12px 20px;
+    background-color: #FF7E85;
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+.or_block {
+    margin-top: 34px;
+    padding: 0 60px;
+    @apply flex items-center font-bold
+}
+
+.line {
+    height: 5px;
+    background-color: black;
+    flex-grow: 1;
+}
+
+.or {
+    margin: 0 86px;
+    font-size: 86px;
+    color: #58BD6A;
+}
+
+.join_form {
+    padding: 0 20px;
+}
+
+
