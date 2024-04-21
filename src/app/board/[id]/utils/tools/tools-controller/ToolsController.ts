@@ -15,6 +15,7 @@ import SocketController from "@/app/board/[id]/utils/socket/SocketController";
 import AlwaysActiveTools from "@/app/board/[id]/utils/tools/tools-controller/AlwaysActiveTools";
 import ScalingTool from "@/app/board/[id]/utils/tools/ScalingTool";
 import DragAndDropTool from "@/app/board/[id]/utils/tools/DragAndDropTool";
+import StickyNoteTool from "@/app/board/[id]/utils/tools/oneclick-tools/StickyNoteTool";
 
 export default class ToolsController {
     switchableTools: SwitchableTools
@@ -35,6 +36,8 @@ export default class ToolsController {
             drawing: new DrawingTool(this.canvas, this.optionsController, socketController),
             select: new SelectTool(this.canvas, this.optionsController, socketController),
             textbox: new TextboxTool(this.canvas, this.optionsController,
+                () => this.switchOn('select'), socketController),
+            stickyNote: new StickyNoteTool(this.canvas, this.optionsController,
                 () => this.switchOn('select'), socketController),
         }
 

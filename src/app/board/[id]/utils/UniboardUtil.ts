@@ -8,6 +8,7 @@ import UniboardData, {hasUniboardData} from "@/app/board/[id]/utils/tools/Uniboa
 import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
 import ImageUtil from "@/app/board/[id]/utils/files/ImageUtil";
 import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
+import StickyNoteUtil from "@/app/board/[id]/utils/files/StickyNoteUtil";
 
 export default class UniboardUtil {
     private readonly id : string;
@@ -149,6 +150,10 @@ export default class UniboardUtil {
 
                 if (obj.uniboardData.type == "uniboard/file") {
                     obj = await FilesUtil.enlivenFromObject(obj);
+                }
+
+                if (obj.uniboardData.type == "uniboard/stickyNote") {
+                    obj = await StickyNoteUtil.enlivenFromObject(obj);
                 }
 
                 if (this.canvas.getContext()) {

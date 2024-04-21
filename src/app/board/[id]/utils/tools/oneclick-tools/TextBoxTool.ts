@@ -12,8 +12,8 @@ class TextboxTool extends AbstractOneClickTool {
         super(canvas, optionsController, enableDefaultTool, socketController);
     }
 
-    protected createObject(pointer : {x: number, y: number}) : fabric.Textbox & UniboardData {
-        const text = Object.assign(new fabric.Textbox('text', {
+    protected createObject(pointer : {x: number, y: number}) : Promise<fabric.Textbox & UniboardData> {
+        const text : fabric.Textbox & UniboardData = Object.assign(new fabric.Textbox('text', {
             left: pointer.x,
             top: pointer.y,
             fill: this.optionsController.options.currentColor,
@@ -33,7 +33,7 @@ class TextboxTool extends AbstractOneClickTool {
             text.setControlVisible(side, false);
         });
 
-        return text;
+        return new Promise((resolve) => resolve(text));
     }
 
 

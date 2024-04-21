@@ -6,6 +6,8 @@ interface UniboardData {
         type: string,
         data?: string,
         fileName?: string
+        stickerColor?: "black" | "blue" | "green" | "red" | "yellow",
+        stickerText?: string,
     }
 }
 
