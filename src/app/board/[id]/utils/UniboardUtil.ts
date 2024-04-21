@@ -63,14 +63,17 @@ export default class UniboardUtil {
                             const tempTop = obj.top;
                             obj.left = canvasObject.left + (canvasObject.width / 2) + obj.left;
                             obj.top = canvasObject.top + (canvasObject.height / 2) + obj.top;
-                            this.socketController.objectModified(obj);
+                            if (hasUniboardData(canvasObject)) {
+                                this.socketController.objectModified(obj);
+                            }
                             obj.left = tempLeft;
                             obj.top = tempTop;
                         }
-
                     })
                 } else {
-                    this.socketController.objectModified(canvasObject);
+                    if (hasUniboardData(canvasObject)) {
+                        this.socketController.objectModified(canvasObject);
+                    }
                 }
             }
         });
@@ -86,6 +89,16 @@ export default class UniboardUtil {
             .getObjects()
             // @ts-ignore
             .find((value) => value.uniboardData.id === obj.uniboardData.id);
+
+        if (obj.uniboardData.type == "uniboard/stickyNote") {
+            if (objOnCanvas instanceof fabric.Group) {
+                let textbox = objOnCanvas.getObjects('textbox')[0];
+                if (textbox instanceof fabric.Textbox) {
+                    textbox.set("text", obj.uniboardData.stickerText);
+                    textbox.fire('changed');
+                }
+            }
+        }
 
         if (objOnCanvas) {
             objOnCanvas.set(obj)
