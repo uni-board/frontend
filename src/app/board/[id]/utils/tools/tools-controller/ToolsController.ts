@@ -16,6 +16,7 @@ import AlwaysActiveTools from "@/app/board/[id]/utils/tools/tools-controller/Alw
 import ScalingTool from "@/app/board/[id]/utils/tools/ScalingTool";
 import DragAndDropTool from "@/app/board/[id]/utils/tools/DragAndDropTool";
 import StickyNoteTool from "@/app/board/[id]/utils/tools/oneclick-tools/StickyNoteTool";
+import CopyAndPasteTool from "@/app/board/[id]/utils/tools/CopyAndPasteTool";
 
 export default class ToolsController {
     switchableTools: SwitchableTools
@@ -45,6 +46,7 @@ export default class ToolsController {
             delete: new DeleteTool(this.canvas, this.optionsController, socketController),
             scaling: new ScalingTool(this.canvas, this.optionsController, socketController),
             dragAndDrop: new DragAndDropTool(this.canvas, this.optionsController, socketController, () => this.switchOn('select')),
+            copyAndPaste: new CopyAndPasteTool(this.canvas, this.optionsController, socketController),
         }
 
         this.enableAlwaysActiveTools();
