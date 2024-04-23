@@ -26,7 +26,7 @@ export default function UseBlock() {
                         "Content-Type": "application/json"
                     },
                     mode: 'no-cors',
-                }).catch((reason) => console.error(reason));
+                });
                 router.push(`/board/${data.id}`)
             });
     }
