@@ -1,0 +1,20 @@
+.name {
+    font-weight: bold;
+}
+
+.description_header {
+    font-weight: bold;
+}
+
+.name_data {
+    font-size: 24px;
+}
+
+.description {
+    padding: 10px;
+    border-radius: 20px;
+    border: 2px solid #cccccc;
+    background-color: #e3e3e3;
+    font-size: 24px;
+    max-width: 800px;
+}

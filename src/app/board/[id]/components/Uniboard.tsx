@@ -4,6 +4,7 @@ import ToolBar from "@/app/board/[id]/components/ToolBar";
 import Canvas from "@/app/board/[id]/components/Canvas";
 import UniboardUtil from "@/app/board/[id]/utils/UniboardUtil";
 import {useEffect, useRef, useState} from "react";
+import TopPanel from "@/app/board/[id]/components/top-panel/TopPanel";
 
 export default function Uniboard({id} : {id: string}) {
 
@@ -47,6 +48,7 @@ export default function Uniboard({id} : {id: string}) {
 
     return (
         <>
+            <TopPanel id={id}/>
             <ToolBar switchToolOn={uniboardUtil?.switchToolOn}/>
             <Canvas id={id} canvasContainerRef={canvasContainerRef}/>
         </>

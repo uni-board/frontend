@@ -1,0 +1,18 @@
+.board_data {
+    background-color: #58BD6A;
+    height: 60px;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-family: "Caudex", serif;
+    font-size: 32px;
+    color: white;
+    font-weight: 500;
+    @apply flex items-center
+}
+
+.vertical_line {
+    height: 41px;
+    width: 4px;
+    background-color: white;
+    margin: 0 15px;
+}

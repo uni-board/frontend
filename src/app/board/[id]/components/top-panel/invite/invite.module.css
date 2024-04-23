@@ -1,0 +1,37 @@
+.share_group {
+    margin-top: 10px;
+    display: flex;
+}
+
+.share_by {
+    margin: 0 -5px;
+    padding: 0 5px;
+    width: 35%;
+}
+
+.share_data {
+    margin: 0 -5px;
+    padding: 0 5px;
+    width: 75%;
+    border: 1px solid #e8e8e8;
+    border-radius: 5px;
+    transition: 0.3s all;
+}
+
+.share_data:hover {
+    border: 1px solid #9ccbe7;
+}
+
+.copy_button {
+    background-color: #EC6B31;
+    border-radius: 10px;
+    padding: 5px;
+    color: white;
+    margin-bottom: 10px;
+    transition: 0.3s all;
+}
+
+.copy_button__copied {
+    background-color: #cccccc;
+    color: #818181;
+}
