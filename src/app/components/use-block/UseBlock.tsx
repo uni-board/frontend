@@ -21,11 +21,7 @@ export default function UseBlock() {
             .then( async (data) => {
                 await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/board/${data.id}/settings/edit`, {
                     method: "PUT",
-                    body: "",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    mode: 'no-cors',
+                    body: JSON.stringify({name: boardName, description: boardDescription}),
                 });
                 router.push(`/board/${data.id}`)
             });
