@@ -5,6 +5,8 @@ import Canvas from "@/app/board/[id]/components/Canvas";
 import UniboardUtil from "@/app/board/[id]/utils/UniboardUtil";
 import {useEffect, useRef, useState} from "react";
 import TopPanel from "@/app/board/[id]/components/top-panel/TopPanel";
+import FullScreenButton from "@/app/board/[id]/components/full-screen-button/FullScreenButton";
+import InfoButton from "@/app/board/[id]/components/info-button/InfoButton";
 
 export default function Uniboard({id} : {id: string}) {
 
@@ -51,6 +53,22 @@ export default function Uniboard({id} : {id: string}) {
             <TopPanel id={id}/>
             <ToolBar switchToolOn={uniboardUtil?.switchToolOn}/>
             <Canvas id={id} canvasContainerRef={canvasContainerRef}/>
+            <InfoButton
+                style={{
+                    position: "fixed",
+                    left: "20px",
+                    bottom: "20px",
+                    zIndex: 10,
+                }}
+            />
+            <FullScreenButton
+                style={{
+                    position: "fixed",
+                    right: "20px",
+                    bottom: "20px",
+                    zIndex: 10,
+                }}
+            />
         </>
     );
 }

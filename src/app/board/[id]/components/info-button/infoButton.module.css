@@ -1,0 +1,48 @@
+.button {
+    width: 60px;
+    background-color: #58BD6A;
+    height: 60px;
+    border-radius: 20px;
+    text-align: center;
+    vertical-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo_title {
+    font-size: 48px;
+    font-family: "Caudex", serif;
+}
+
+.info_modal {
+    max-width: 700px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.project_about {
+    margin: 20px 0 10px 0;
+}
+
+.project_about__title {
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.shortcuts {
+    margin-top: 20px;
+}
+
+.shortcuts__title {
+    font-weight: bold;
+    font-size: 32px;
+}
+
+.key {
+    background-color: #f1f1f1;
+    padding: 4px;
+    border: 1px solid #c7c7c7;
+    border-radius: 5px;
+    color: #696969;
+}
