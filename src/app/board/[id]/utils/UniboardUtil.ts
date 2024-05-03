@@ -69,7 +69,7 @@ export default class UniboardUtil {
                             const tempTop = obj.top;
                             obj.left = canvasObject.left + (canvasObject.width / 2) + obj.left;
                             obj.top = canvasObject.top + (canvasObject.height / 2) + obj.top;
-                            if (hasUniboardData(canvasObject)) {
+                            if (hasUniboardData(obj)) {
                                 this.socketController.objectModified(obj);
                             }
                             obj.left = tempLeft;
