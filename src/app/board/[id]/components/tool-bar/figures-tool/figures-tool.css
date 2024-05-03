@@ -1,0 +1,24 @@
+.shapes {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(243, 243, 243);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.shapes button {
+    transition: 0.2s all ease-in-out;
+}
+
+.shapes button:hover {
+    transform: scale(1.1);
+}
+
+.fill {
+    width: 100%;
+    padding:  10px 10px;
+    background-color: rgb(243, 243, 243);
+    border-radius: 10px;
+}

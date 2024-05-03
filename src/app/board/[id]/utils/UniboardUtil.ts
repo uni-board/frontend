@@ -9,6 +9,8 @@ import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
 import ImageUtil from "@/app/board/[id]/utils/files/ImageUtil";
 import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
 import StickyNoteUtil from "@/app/board/[id]/utils/files/StickyNoteUtil";
+import {Dispatch, SetStateAction} from "react";
+import ToolsOptions from "@/app/board/[id]/utils/options/ToolsOptions";
 
 export default class UniboardUtil {
     private readonly id : string;
@@ -17,7 +19,7 @@ export default class UniboardUtil {
     private readonly canvas: fabric.Canvas;
     private readonly socketController: SocketController;
 
-    constructor(id: string) {
+    constructor(id: string, setActualToolType: Dispatch<SetStateAction<keyof SwitchableTools>>) {
         this.canvas = new fabric.Canvas(id, {
             perPixelTargetFind: true,
         });
@@ -29,11 +31,15 @@ export default class UniboardUtil {
             deleted: this.objectDeletedFromServer,
         });
         this.socketController = new SocketController(this.canvas, this.id, model);
-        this.toolsController = new ToolsController(this.canvas, this.optionsController, this.socketController);
+        this.toolsController = new ToolsController(this.canvas, this.optionsController, this.socketController, setActualToolType);
         this.configureSettings();
         this.loadObjects();
         this.handleModifications();
 
+    }
+
+    public setOption<K extends keyof ToolsOptions>(key : K, value : ToolsOptions[K]) : void {
+        this.optionsController.set(key, value);
     }
 
     private configureSettings = () => {

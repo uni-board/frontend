@@ -1,20 +1,23 @@
 'use client'
 
-import ToolBar from "@/app/board/[id]/components/ToolBar";
+import ToolBar from "@/app/board/[id]/components/tool-bar/ToolBar";
 import Canvas from "@/app/board/[id]/components/Canvas";
 import UniboardUtil from "@/app/board/[id]/utils/UniboardUtil";
 import {useEffect, useRef, useState} from "react";
 import TopPanel from "@/app/board/[id]/components/top-panel/TopPanel";
 import FullScreenButton from "@/app/board/[id]/components/full-screen-button/FullScreenButton";
 import InfoButton from "@/app/board/[id]/components/info-button/InfoButton";
+import commander from "commander";
+import SwitchableTools from "@/app/board/[id]/utils/tools/tools-controller/SwitchableTools";
 
 export default function Uniboard({id} : {id: string}) {
 
     const [uniboardUtil, setUniboardUtil] = useState<UniboardUtil>();
+    const [actualToolType, setActualToolType] = useState<keyof SwitchableTools>('select');
     const canvasContainerRef = useRef(null);
 
     useEffect( () => {
-        let uniboardUtil = new UniboardUtil(id);
+        let uniboardUtil = new UniboardUtil(id, setActualToolType);
         setUniboardUtil(uniboardUtil);
 
         if (canvasContainerRef.current) {
@@ -51,7 +54,7 @@ export default function Uniboard({id} : {id: string}) {
     return (
         <>
             <TopPanel id={id}/>
-            <ToolBar switchToolOn={uniboardUtil?.switchToolOn}/>
+            <ToolBar switchToolOn={uniboardUtil?.switchToolOn} actualToolType={actualToolType} setOption={uniboardUtil}/>
             <Canvas id={id} canvasContainerRef={canvasContainerRef}/>
             <InfoButton
                 style={{

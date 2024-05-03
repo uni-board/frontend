@@ -1,13 +1,13 @@
 import slider from "./slider.module.css";
 import clsx from "clsx";
-import {useRef, useState} from "react";
+import {CSSProperties, useRef, useState} from "react";
 
-export default function Slider({min, max, onChange, value, steps} : {min: number, max: number, onChange?: () => void, value: number, steps: number}) {
+export default function Slider({min, max, onChange, value, steps, style} : {min: number, max: number, onChange?: (value: number) => void, value: number, steps: number, style?: CSSProperties | undefined}) {
     let [sliderValue, setSliderValue] = useState(value);
     let [show, setShow] = useState(false);
 
     return (
-        <div className={slider.range}>
+        <div className={slider.range} style={style}>
             <div className={slider.slider_value}>
                 <span className={clsx(slider.slider_value__span, {[slider.show] : show})} style={{
                     left: sliderValue * (100/(max-min)) + "%",
@@ -24,7 +24,7 @@ export default function Slider({min, max, onChange, value, steps} : {min: number
                     setSliderValue(Number.parseInt(e.target.value))
                     setShow(true);
                     if (onChange) {
-                        onChange();
+                        onChange(sliderValue);
                     }
                 }}
                 onBlur={() => setShow(false)}/>

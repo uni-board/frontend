@@ -1,0 +1,17 @@
+.sticker {
+    width: 36px;
+    height: 36px;
+    display: block;
+    transition: 0.2s all ease-in-out;
+}
+
+.sticker:hover {
+    transform: scale(1.1);
+}
+
+.stickers {
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: rgb(243, 243, 243);
+}

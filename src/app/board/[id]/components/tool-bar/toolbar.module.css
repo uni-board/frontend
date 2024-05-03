@@ -1,0 +1,15 @@
+.toolbar {
+    width: 60px;
+    background-color: #58BD6A;
+    position: fixed;
+    top: 100px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    padding: 5px;
+    gap: 5px;
+    z-index: 3;
+}
+

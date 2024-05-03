@@ -17,6 +17,7 @@ import ScalingTool from "@/app/board/[id]/utils/tools/ScalingTool";
 import DragAndDropTool from "@/app/board/[id]/utils/tools/DragAndDropTool";
 import StickyNoteTool from "@/app/board/[id]/utils/tools/oneclick-tools/StickyNoteTool";
 import CopyAndPasteTool from "@/app/board/[id]/utils/tools/CopyAndPasteTool";
+import {Dispatch, SetStateAction} from "react";
 
 export default class ToolsController {
     switchableTools: SwitchableTools
@@ -24,8 +25,9 @@ export default class ToolsController {
 
     private canvas: fabric.Canvas;
     private optionsController: OptionsController;
+    private setActualToolType: Dispatch<SetStateAction<keyof SwitchableTools>>;
 
-    constructor(canvas: fabric.Canvas, optionsController: OptionsController, socketController: SocketController) {
+    constructor(canvas: fabric.Canvas, optionsController: OptionsController, socketController: SocketController, setActualToolType: Dispatch<SetStateAction<keyof SwitchableTools>>) {
         this.canvas = canvas;
         this.optionsController = optionsController;
         this.switchableTools = {
@@ -49,7 +51,9 @@ export default class ToolsController {
             copyAndPaste: new CopyAndPasteTool(this.canvas, this.optionsController, socketController),
         }
 
+        this.setActualToolType = setActualToolType;
         this.enableAlwaysActiveTools();
+        this.switchOn('select');
     }
 
     private enableAlwaysActiveTools = () : void => {
@@ -59,6 +63,7 @@ export default class ToolsController {
 
     public switchOn(tool: keyof SwitchableTools) {
         this.disableAll();
+        this.setActualToolType(tool)
         this.switchableTools[tool].enable();
     }
 
