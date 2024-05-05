@@ -65,15 +65,50 @@ export default class UniboardUtil {
                             && canvasObject.left && canvasObject.top
                             && canvasObject.width && canvasObject.height
                         ) {
+                            if (obj instanceof fabric.Line) {
+                                const tempX1 = obj.x1;
+                                const tempY1 = obj.y1;
+                                const tempX2 = obj.x2;
+                                const tempY2 = obj.y2;
+                                const tempLeft = obj.left;
+                                const tempTop = obj.top;
+                                const tempAngle = obj.angle ? obj.angle : 0;
+
+                                let matrix = canvasObject.calcTransformMatrix();
+                                let point = fabric.util.transformPoint(new fabric.Point(obj.left, obj.top), matrix);
+
+                                obj.rotate(canvasObject.angle ? canvasObject.angle : 0);
+                                obj.left = point.x;
+                                obj.top = point.y;
+
+
+
+                                if (hasUniboardData(obj)) {
+                                    this.socketController.objectModified(obj);
+                                }
+                                obj.x1 = tempX1;
+                                obj.x2 = tempX2;
+                                obj.y1 = tempY1;
+                                obj.y2 = tempY2;
+                                obj.left = tempLeft;
+                                obj.top = tempTop;
+                                obj.angle = tempAngle;
+                                return;
+
+                            }
                             const tempLeft = obj.left;
                             const tempTop = obj.top;
-                            obj.left = canvasObject.left + (canvasObject.width / 2) + obj.left;
-                            obj.top = canvasObject.top + (canvasObject.height / 2) + obj.top;
+                            const tempAngle = obj.angle ? obj.angle : 0;
+
+                            obj.angle = tempAngle + (canvasObject.angle ? canvasObject.angle : 0);
+                            obj.top = canvasObject.top + fabric.util.rotateVector({x: tempLeft +  canvasObject.width/2, y:tempTop + canvasObject.height / 2}, fabric.util.degreesToRadians(canvasObject.angle ? canvasObject.angle : 0)).y;
+                            obj.left = canvasObject.left + fabric.util.rotateVector({x: tempLeft + canvasObject.width/2, y:tempTop + canvasObject.height / 2}, fabric.util.degreesToRadians(canvasObject.angle ? canvasObject.angle : 0)).x;
                             if (hasUniboardData(obj)) {
                                 this.socketController.objectModified(obj);
                             }
                             obj.left = tempLeft;
                             obj.top = tempTop;
+                            obj.angle = tempAngle;
                         }
                     })
                 } else {
@@ -103,6 +138,19 @@ export default class UniboardUtil {
                     textbox.set("text", obj.uniboardData.stickerText);
                     textbox.fire('changed');
                 }
+            }
+        }
+
+        if (obj.uniboardData.type == "line") {
+            let {x1, y1, x2, y2, angle, ...other} = obj;
+            obj = other;
+            if (objOnCanvas instanceof fabric.Line) {
+                objOnCanvas.angle = angle;
+                objOnCanvas.x1 = x1;
+                objOnCanvas.x2 = x2;
+                objOnCanvas.y1 = y1;
+                objOnCanvas.y2 = y2;
+                this.canvas.renderAll();
             }
         }
 
