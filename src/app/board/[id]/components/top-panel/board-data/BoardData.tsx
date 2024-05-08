@@ -10,7 +10,7 @@ const caudex = Caudex({
     subsets: ["latin"]
 });
 
-export default function BoardData({style, id} : {style?: React.CSSProperties, id:string} ) {
+export default function BoardData({style, id, exportAsImage} : {style?: React.CSSProperties, id:string, exportAsImage: () => void} ) {
 
     let [name, setName] = useState("");
     let [description, setDescription] = useState("");
@@ -35,7 +35,7 @@ export default function BoardData({style, id} : {style?: React.CSSProperties, id
                 description={description}
             />
             <VerticalLine/>
-            <ExportButton/>
+            <ExportButton onclick={exportAsImage}/>
         </div>
     )
 

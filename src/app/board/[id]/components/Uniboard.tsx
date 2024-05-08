@@ -53,7 +53,7 @@ export default function Uniboard({id} : {id: string}) {
 
     return (
         <>
-            <TopPanel id={id}/>
+            <TopPanel id={id} exportAsImage={() => uniboardUtil?.exportAsImage()}/>
             <ToolBar switchToolOn={uniboardUtil?.switchToolOn} actualToolType={actualToolType} setOption={uniboardUtil}/>
             <Canvas id={id} canvasContainerRef={canvasContainerRef}/>
             <InfoButton

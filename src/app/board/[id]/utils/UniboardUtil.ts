@@ -53,6 +53,9 @@ export default class UniboardUtil {
         fabric.Object.prototype.perPixelTargetFind = false;
         fabric.Object.prototype.includeDefaultValues = false;
         fabric.Object.prototype.objectCaching = false;
+        this.canvas.setBackgroundColor(new fabric.Pattern({source: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 100 100'%3E%3Crect x='0' y='0' width='13' height='13' fill-opacity='0.1' fill='%23000000'/%3E%3C/svg%3E", repeat: "repeat"}), () => {
+            this.canvas.renderAll();
+        })
     }
 
     private handleModifications = () => {
@@ -186,6 +189,18 @@ export default class UniboardUtil {
 
     public switchToolOn = (tool: keyof SwitchableTools) =>  {
         this.toolsController.switchOn(tool);
+    }
+
+    public exportAsImage = () => {
+        const canvasAsImage = this.canvas.toDataURL();
+        fetch(canvasAsImage)
+            .then((res) => res.blob()).then((blob) => {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.setAttribute('download', `uniboard_${this.id}.png`);
+            downloadLink.click();
+            URL.revokeObjectURL(downloadLink.href);
+        });
     }
 
     public loadObjects() {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import BoardData from "@/app/board/[id]/components/top-panel/board-data/BoardData";
 import Invite from "@/app/board/[id]/components/top-panel/invite/Invite";
 
-export default function TopPanel({id} : {id: string}) {
+export default function TopPanel({id, exportAsImage} : {id: string, exportAsImage: () => void}) {
 
 
     return (
@@ -13,7 +13,7 @@ export default function TopPanel({id} : {id: string}) {
             <Link href="/">
                 <GreenLogo width={"60px"} height={"60px"}/>
             </Link>
-            <BoardData style={{marginLeft: "20px"}} id={id}/>
+            <BoardData style={{marginLeft: "20px"}} id={id} exportAsImage={exportAsImage}/>
             <Invite id={id}/>
         </div>
     );
