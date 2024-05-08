@@ -35,7 +35,6 @@ export default class UniboardUtil {
         this.configureSettings();
         this.loadObjects();
         this.handleModifications();
-
     }
 
     public setOption<K extends keyof ToolsOptions>(key : K, value : ToolsOptions[K]) : void {
@@ -53,9 +52,9 @@ export default class UniboardUtil {
         fabric.Object.prototype.perPixelTargetFind = false;
         fabric.Object.prototype.includeDefaultValues = false;
         fabric.Object.prototype.objectCaching = false;
-        this.canvas.setBackgroundColor(new fabric.Pattern({source: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 100 100'%3E%3Crect x='0' y='0' width='13' height='13' fill-opacity='0.1' fill='%23000000'/%3E%3C/svg%3E", repeat: "repeat"}), () => {
-            this.canvas.renderAll();
-        })
+        let image = new Image();
+        image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='54' height='54' viewBox='0 0 100 100'%3E%3Crect x='0' y='0' width='13' height='13' fill-opacity='0.1' fill='%23000000'/%3E%3C/svg%3E";
+        this.canvas.setBackgroundColor(new fabric.Pattern({source: image, repeat: "repeat"}), this.canvas.renderAll.bind(this.canvas))
     }
 
     private handleModifications = () => {
