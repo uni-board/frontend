@@ -12,6 +12,9 @@ class PdfObject {
     private readonly object: Promise<fabric.Group & UniboardData>;
     private readonly uniboardData: UniboardData;
     private page: number;
+    private mouseIn: boolean;
+    private nextButton : fabric.Object | undefined;
+    private prevButton: fabric.Object | undefined;
 
     constructor(pdf: PdfAsImg, uniboardData: UniboardData) {
         this.pdf = pdf;
@@ -19,6 +22,7 @@ class PdfObject {
         this.page = 1;
         this.image = this.getFirstPageImage();
         this.object = new Promise(this.createPdfObject);
+        this.mouseIn = false;
         this.setUpPdfObject();
     }
 
@@ -48,7 +52,9 @@ class PdfObject {
 
     private readonly setUpPdfObject = async () => {
         const pdfObject = await this.object;
-        pdfObject.on("mousedblclick", this.nextPage)
+        pdfObject.on("mousedblclick", this.nextPage);
+        await this.trackMousePosition();
+        await this.handleClickInside();
     }
 
     private readonly nextPage = async () => {
@@ -56,6 +62,21 @@ class PdfObject {
         this.page++;
         if (this.page > pagesCount) {
             this.page = 1;
+        }
+
+        const newImage = await this.getPageImage(this.page);
+        const pdfObjSettings = await this.getPdfObjSettingsAndSetToDefault();
+        const point = await this.calcActualImagePos();
+        this.positionImage(newImage, point);
+        await this.updateImage(newImage);
+        await this.returnSettingsToPrevious(pdfObjSettings);
+    }
+
+    private readonly prevPage = async () => {
+        const pagesCount = await this.pdf.getPagesCount();
+        this.page++;
+        if (this.page < 1) {
+            this.page = pagesCount;
         }
 
         const newImage = await this.getPageImage(this.page);
@@ -124,6 +145,72 @@ class PdfObject {
         pdfObj.rotate(prevSettings.angle);
         if (pdfObj.canvas) {
             pdfObj.canvas.requestRenderAll();
+        }
+    }
+
+    private trackMousePosition = async () => {
+        const pdfObj = await this.object;
+        pdfObj.on("mouseover", () => this.mouseIn = true);
+        pdfObj.on("mouseout", () => this.mouseIn = false);
+    }
+
+    private readonly handleClickInside = async () => {
+        const pdfObj = await this.object;
+        pdfObj.on("mousedown", this.setUpNextButton)
+    }
+
+    private readonly setUpNextButton = async () => {
+        if (this.nextButton) {
+            return;
+        }
+        const pdfObj = await this.object;
+        if (pdfObj.canvas) {
+            const pdfObjWidth = pdfObj.width || 0;
+            const pdfObjHeight = pdfObj.height || 0;
+            const rectWidth = pdfObjWidth * 0.06
+            const point = new fabric.Point(pdfObjWidth / 2 - rectWidth, -pdfObjHeight/2 - rectWidth * 1.25);
+            const newPoint = fabric.util.transformPoint(point, pdfObj.calcTransformMatrix());
+            const button : fabric.Object = new fabric.Rect({
+                width: rectWidth,
+                height: rectWidth,
+                fill: "red",
+                top: newPoint.y,
+                left: newPoint.x,
+                lockMovementY: true,
+                lockMovementX: true,
+                hasBorders: false,
+                hasControls: false,
+                perPixelTargetFind: false,
+                hoverCursor: "pointer",
+                selectable: true,
+            });
+            this.nextButton = button;
+            console.log("added");
+            pdfObj.canvas.add(button);
+            const calcPos = () => {
+                pdfObj.canvas?.remove(button);
+                button.rotate(pdfObj.angle || 0);
+                button.set({
+                    scaleX: pdfObj.scaleX || 1,
+                    scaleY: pdfObj.scaleY || 1,
+                });
+                const pos = fabric.util.transformPoint(point, pdfObj.calcTransformMatrix())
+                button.set({
+                    top: pos.y,
+                    left: pos.x,
+                })
+                pdfObj.canvas?.add(button);
+                pdfObj.canvas?.renderAll();
+            }
+            pdfObj.on("rotating", calcPos);
+            pdfObj.on("scaling", calcPos);
+            pdfObj.on("moving", calcPos);
+            pdfObj.on("skewing", calcPos);
+
+            button.on("mousedown", () => {
+                this.nextPage();
+                console.log("next page");
+            });
         }
     }
 
