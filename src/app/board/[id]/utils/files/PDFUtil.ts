@@ -4,6 +4,7 @@ import PdfAsImg from "@/app/board/[id]/utils/helpers/pdf-as-img/PdfAsImg";
 import PDFConverterBackend from "@/app/board/[id]/utils/helpers/pdf-as-img/PDFConverterBackend";
 import {v4 as uuidv4} from "uuid";
 import {IEvent} from "fabric/fabric-impl";
+import PDFConverterClient from "@/app/board/[id]/utils/helpers/pdf-as-img/PDFConverterClient";
 
 
 class PdfObject {
@@ -247,6 +248,7 @@ export default class PDFUtil {
             }
             const fileId = await this.putFileInStorageAndGetId(file);
             let pdf : PdfAsImg = new PDFConverterBackend(fileId);
+            //let pdf : PdfAsImg = new PDFConverterClient(file);
 
             let pdfObj = new PdfObject(pdf, {
                 uniboardData: {
@@ -284,8 +286,18 @@ export default class PDFUtil {
             }
 
             let pdf : PdfAsImg = new PDFConverterBackend(object.uniboardData.data);
+            //let pdf : PdfAsImg = new PDFConverterClient(await this.loadFileFromStore(object.uniboardData.id))
             let pdfObj = new PdfObject(pdf, {uniboardData: object.uniboardData});
             resolve(pdfObj.get())
         });
+    }
+
+    private static loadFileFromStore(fileId: string) : Promise<File> {
+        return  fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/storage/${fileId}`, {
+            method: "GET",
+        })
+            .then((response) => response.blob())
+            .then(blob => new File([blob], "file.pdf"))
+
     }
 }
