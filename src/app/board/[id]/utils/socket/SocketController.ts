@@ -36,7 +36,7 @@ export default class SocketController {
     }
 
     private isFileObject(obj: any) {
-        const fileObjects = ["uniboard/file", "uniboard/image", "uniboard/svg", "uniboard/stickyNote"];
+        const fileObjects = ["uniboard/file", "uniboard/image", "uniboard/svg", "uniboard/stickyNote", "uniboard/pdf"];
         return fileObjects.includes(obj.uniboardData.type);
     }
 

@@ -11,6 +11,7 @@ import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
 import StickyNoteUtil from "@/app/board/[id]/utils/files/StickyNoteUtil";
 import {Dispatch, SetStateAction} from "react";
 import ToolsOptions from "@/app/board/[id]/utils/options/ToolsOptions";
+import PDFUtil from "@/app/board/[id]/utils/files/PDFUtil";
 
 export default class UniboardUtil {
     private readonly id : string;
@@ -221,6 +222,10 @@ export default class UniboardUtil {
 
                 if (obj.uniboardData.type == "uniboard/stickyNote") {
                     obj = await StickyNoteUtil.enlivenFromObject(obj);
+                }
+
+                if (obj.uniboardData.type == "uniboard/pdf") {
+                    obj = await PDFUtil.enlivenFromObject(obj);
                 }
 
                 if (this.canvas.getContext()) {

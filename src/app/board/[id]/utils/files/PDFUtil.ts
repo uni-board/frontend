@@ -172,4 +172,17 @@ export default class PDFUtil {
             resolve(id);
         });
     }
+
+    public static enlivenFromObject(object: fabric.Object & UniboardData) : Promise<fabric.Object & UniboardData> {
+        return new Promise(async (resolve, reject) => {
+            if (object.uniboardData.type != "uniboard/pdf" || !object.uniboardData.data) {
+                reject(new Error("Данный объект не является объектом типа \"uniboard\\pdf\" или у него отсутсвует id файла"));
+                return;
+            }
+
+            let pdf : PdfAsImg = new PDFConverterBackend(object.uniboardData.data);
+            let pdfObj = new PdfObject(pdf, {uniboardData: object.uniboardData});
+            resolve(pdfObj.get())
+        });
+    }
 }
