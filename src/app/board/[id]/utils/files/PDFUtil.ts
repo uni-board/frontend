@@ -3,6 +3,7 @@ import UniboardData from "@/app/board/[id]/utils/tools/UniboardData";
 import PdfAsImg from "@/app/board/[id]/utils/helpers/pdf-as-img/PdfAsImg";
 import PDFConverterBackend from "@/app/board/[id]/utils/helpers/pdf-as-img/PDFConverterBackend";
 import {v4 as uuidv4} from "uuid";
+import {IEvent} from "fabric/fabric-impl";
 
 
 class PdfObject {
@@ -189,6 +190,7 @@ class PdfObject {
             pdfObj.canvas.add(button);
             const calcPos = () => {
                 pdfObj.canvas?.remove(button);
+                button.off("mousedown", this.nextPage);
                 button.rotate(pdfObj.angle || 0);
                 button.set({
                     scaleX: pdfObj.scaleX || 1,
@@ -200,6 +202,7 @@ class PdfObject {
                     left: pos.x,
                 })
                 pdfObj.canvas?.add(button);
+                button.on("mousedown", this.nextPage);
                 pdfObj.canvas?.renderAll();
             }
             pdfObj.on("rotating", calcPos);
@@ -207,10 +210,23 @@ class PdfObject {
             pdfObj.on("moving", calcPos);
             pdfObj.on("skewing", calcPos);
 
-            button.on("mousedown", () => {
-                this.nextPage();
-                console.log("next page");
-            });
+            button.on("mousedown", this.nextPage);
+
+            const handleClickOutside = (e: IEvent) => {
+                if (this.mouseIn || e.target == button) {
+                    return;
+                }
+                pdfObj.canvas?.remove(button);
+                this.nextButton = undefined;
+                pdfObj.off("rotating", calcPos);
+                pdfObj.off("scaling", calcPos);
+                pdfObj.off("moving", calcPos);
+                pdfObj.off("skewing", calcPos);
+                pdfObj.canvas?.off("mousedown", handleClickOutside);
+            }
+
+            pdfObj.canvas.on("mouse:down", handleClickOutside);
+
         }
     }
 
