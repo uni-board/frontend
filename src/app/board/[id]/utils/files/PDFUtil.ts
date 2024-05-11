@@ -9,53 +9,26 @@ import {IEvent} from "fabric/fabric-impl";
 class PdfObject {
 
     private readonly pdf: PdfAsImg;
-    private image: Promise<fabric.Image>;
-    private readonly object: Promise<fabric.Group & UniboardData>;
-    private readonly uniboardData: UniboardData;
+    private image: fabric.Image;
+    private readonly object: fabric.Group & UniboardData;
     private page: number;
     private mouseIn: boolean;
     private nextButton : fabric.Object | undefined;
     private prevButton: fabric.Object | undefined;
 
-    constructor(pdf: PdfAsImg, uniboardData: UniboardData) {
+    constructor(pdf: PdfAsImg, image: fabric.Image, object: fabric.Group & UniboardData) {
         this.pdf = pdf;
-        this.uniboardData = uniboardData;
+        this.image = image;
+        this.object = object;
         this.page = 1;
-        this.image = this.getFirstPageImage();
-        this.object = new Promise(this.createPdfObject);
         this.mouseIn = false;
         this.setUpPdfObject();
     }
 
-    private readonly getFirstPageImage = () => {
-        return this.getPageImage(1);
-    }
-
-    private readonly createPdfObject = async (resolve: (value: (PromiseLike<fabric.Group & UniboardData> | fabric.Group & UniboardData)) => void, reject: (reason?: any) => void) => {
-        const image = await this.image;
-        const background = this.createBackgroundObjectFor(image);
-        const objectWithoutUniboardData = new fabric.Group([background, image]);
-        const object = Object.assign(objectWithoutUniboardData, this.uniboardData)
-        resolve(object);
-    }
-
-    private readonly createBackgroundObjectFor = (image: fabric.Image) : fabric.Object => {
-        let imageBoundingRect = image.getBoundingRect();
-        const border = imageBoundingRect.width * 0.02;
-        return new fabric.Rect({
-            top: imageBoundingRect.top - border,
-            left: imageBoundingRect.left - border,
-            width: imageBoundingRect.width + border * 2,
-            height: imageBoundingRect.height + border * 2,
-            fill: "gray",
-        });
-    }
-
-    private readonly setUpPdfObject = async () => {
-        const pdfObject = await this.object;
-        pdfObject.on("mousedblclick", this.nextPage);
-        await this.trackMousePosition();
-        await this.handleClickInside();
+    private readonly setUpPdfObject = () => {
+        this.object.on("mousedblclick", this.nextPage);
+        this.trackMousePosition();
+        this.handleClickInside();
     }
 
     private readonly nextPage = async () => {
@@ -66,26 +39,11 @@ class PdfObject {
         }
 
         const newImage = await this.getPageImage(this.page);
-        const pdfObjSettings = await this.getPdfObjSettingsAndSetToDefault();
-        const point = await this.calcActualImagePos();
+        const pdfObjSettings = this.getPdfObjSettingsAndSetToDefault();
+        const point = this.calcActualImagePos();
         this.positionImage(newImage, point);
-        await this.updateImage(newImage);
-        await this.returnSettingsToPrevious(pdfObjSettings);
-    }
-
-    private readonly prevPage = async () => {
-        const pagesCount = await this.pdf.getPagesCount();
-        this.page++;
-        if (this.page < 1) {
-            this.page = pagesCount;
-        }
-
-        const newImage = await this.getPageImage(this.page);
-        const pdfObjSettings = await this.getPdfObjSettingsAndSetToDefault();
-        const point = await this.calcActualImagePos();
-        this.positionImage(newImage, point);
-        await this.updateImage(newImage);
-        await this.returnSettingsToPrevious(pdfObjSettings);
+        this.updateImage(newImage);
+        this.returnSettingsToPrevious(pdfObjSettings);
     }
 
     private readonly getPageImage = (page: number) : Promise<fabric.Image>  => {
@@ -96,9 +54,8 @@ class PdfObject {
         })
     }
 
-    private readonly getPdfObjSettingsAndSetToDefault =  () : Promise<{angle: number, scaleX: number, scaleY: number}> => {
-        return new Promise(async (resolve, reject) => {
-            const pdfObj = await this.object;
+    private readonly getPdfObjSettingsAndSetToDefault =  () : {angle: number, scaleX: number, scaleY: number} => {
+            const pdfObj = this.object;
             let res =  {
                 angle: pdfObj.angle || 0,
                 scaleX: pdfObj.scaleX || 1,
@@ -107,19 +64,15 @@ class PdfObject {
             pdfObj.rotate(0);
             pdfObj.scale(1);
 
-            resolve(res);
-        })
+            return res;
     }
 
-    private readonly calcActualImagePos = () : Promise<fabric.Point> => {
-        return new Promise( async (resolve, reject) => {
-            const pdfObj = await this.object;
-            const image = await this.image;
-            const matrix = pdfObj.calcTransformMatrix();
-            const point = fabric.util.transformPoint(new fabric.Point(image.left || 0, image.top || 0), matrix);
-            resolve(point);
-        })
-
+    private readonly calcActualImagePos = () : fabric.Point => {
+        const pdfObj = this.object;
+        const image = this.image;
+        const matrix = pdfObj.calcTransformMatrix();
+        const point = fabric.util.transformPoint(new fabric.Point(image.left || 0, image.top || 0), matrix);
+        return point
     }
 
     private readonly positionImage = (image: fabric.Image, point: fabric.Point)  => {
@@ -129,16 +82,16 @@ class PdfObject {
         })
     }
 
-    private readonly updateImage = async (newImage: fabric.Image) => {
-        const pdfObj = await this.object;
-        const oldImage = await this.image;
+    private readonly updateImage = (newImage: fabric.Image) => {
+        const pdfObj = this.object;
+        const oldImage = this.image;
         pdfObj.remove(oldImage);
         pdfObj.addWithUpdate(newImage);
-        this.image = new Promise((resolve) => resolve(newImage));
+        this.image = newImage;
     }
 
-    private readonly returnSettingsToPrevious = async (prevSettings: {angle: number, scaleX: number, scaleY: number}) => {
-        const pdfObj = await this.object;
+    private readonly returnSettingsToPrevious = (prevSettings: {angle: number, scaleX: number, scaleY: number}) => {
+        const pdfObj = this.object;
         pdfObj.set({
             scaleX: prevSettings.scaleX,
             scaleY: prevSettings.scaleY,
@@ -149,22 +102,23 @@ class PdfObject {
         }
     }
 
-    private trackMousePosition = async () => {
-        const pdfObj = await this.object;
+    private trackMousePosition = () => {
+        const pdfObj = this.object;
         pdfObj.on("mouseover", () => this.mouseIn = true);
         pdfObj.on("mouseout", () => this.mouseIn = false);
     }
 
-    private readonly handleClickInside = async () => {
-        const pdfObj = await this.object;
+    private readonly handleClickInside = () => {
+        const pdfObj = this.object;
         pdfObj.on("mousedown", this.setUpNextButton)
     }
 
-    private readonly setUpNextButton = async () => {
+    private readonly setUpNextButton = () => {
+        console.log("setup button")
         if (this.nextButton) {
             return;
         }
-        const pdfObj = await this.object;
+        const pdfObj = this.object;
         if (pdfObj.canvas) {
             const pdfObjWidth = pdfObj.width || 0;
             const pdfObjHeight = pdfObj.height || 0;
@@ -230,7 +184,42 @@ class PdfObject {
         }
     }
 
-    public get = async () : Promise<fabric.Object & UniboardData> => {
+    public static createPdfObject(pdf: PdfAsImg, uniboardData: UniboardData) : Promise<PdfObject> {
+        return new Promise(async (resolve, reject) => {
+            const image : fabric.Image = await this.getPageAsFabricImage(pdf, 1);
+            const object: fabric.Group & UniboardData = this.createPDFObject(image, uniboardData);
+            const pdfObj = new PdfObject(pdf, image, object);
+            resolve(pdfObj)
+        });
+    }
+
+    private static getPageAsFabricImage(pdf: PdfAsImg, page: number) : Promise<fabric.Image> {
+        return new Promise( async (resolve, reject) => {
+            const img = await pdf.getPage(page);
+            resolve(new fabric.Image(img));
+        })
+    }
+
+    private static createPDFObject(firstPage: fabric.Image, uniboardData: UniboardData) {
+        const background = this.createBackgroundObjectFor(firstPage);
+        const objectWithoutUniboardData = new fabric.Group([background, firstPage]);
+        const object = Object.assign(objectWithoutUniboardData, uniboardData)
+        return object;
+    }
+
+    private static readonly createBackgroundObjectFor = (image: fabric.Image) : fabric.Object => {
+        let imageBoundingRect = image.getBoundingRect();
+        const border = imageBoundingRect.width * 0.02;
+        return new fabric.Rect({
+            top: imageBoundingRect.top - border,
+            left: imageBoundingRect.left - border,
+            width: imageBoundingRect.width + border * 2,
+            height: imageBoundingRect.height + border * 2,
+            fill: "gray",
+        });
+    }
+
+    public get = () : fabric.Object & UniboardData => {
         return this.object;
     }
 }
@@ -248,7 +237,7 @@ export default class PDFUtil {
             const fileId = await this.putFileInStorageAndGetId(file);
             let pdf : PdfAsImg = new PDFConverterBackend(fileId);
 
-            let pdfObj = new PdfObject(pdf, {
+            let pdfObj = await PdfObject.createPdfObject(pdf, {
                 uniboardData: {
                     id: uuidv4(),
                     creator: "1",
@@ -284,7 +273,7 @@ export default class PDFUtil {
             }
 
             let pdf : PdfAsImg = new PDFConverterBackend(object.uniboardData.data);
-            let pdfObj = new PdfObject(pdf, {uniboardData: object.uniboardData});
+            let pdfObj = await PdfObject.createPdfObject(pdf, {uniboardData: object.uniboardData});
             resolve(pdfObj.get())
         });
     }
