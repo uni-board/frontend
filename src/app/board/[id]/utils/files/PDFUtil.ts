@@ -4,6 +4,7 @@ import PdfAsImg from "@/app/board/[id]/utils/helpers/pdf-as-img/PdfAsImg";
 import PDFConverterBackend from "@/app/board/[id]/utils/helpers/pdf-as-img/PDFConverterBackend";
 import {v4 as uuidv4} from "uuid";
 import {IEvent} from "fabric/fabric-impl";
+import PDFConverterService from "@/app/board/[id]/utils/helpers/pdf-as-img/PDFConverterService";
 
 
 class PdfObject {
@@ -246,7 +247,7 @@ export default class PDFUtil {
                 reject(new Error("Попытка создания pdf из некорректного файла"));
             }
             const fileId = await this.putFileInStorageAndGetId(file);
-            let pdf : PdfAsImg = new PDFConverterBackend(fileId);
+            let pdf : PdfAsImg = new PDFConverterService(fileId);
 
             let pdfObj = new PdfObject(pdf, {
                 uniboardData: {
@@ -283,7 +284,7 @@ export default class PDFUtil {
                 return;
             }
 
-            let pdf : PdfAsImg = new PDFConverterBackend(object.uniboardData.data);
+            let pdf : PdfAsImg = new PDFConverterService(object.uniboardData.data);
             let pdfObj = new PdfObject(pdf, {uniboardData: object.uniboardData});
             resolve(pdfObj.get())
         });
