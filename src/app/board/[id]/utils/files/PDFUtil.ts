@@ -44,6 +44,7 @@ class PdfObject {
         this.positionImage(newImage, point);
         this.updateImage(newImage);
         this.returnSettingsToPrevious(pdfObjSettings);
+        this.object.fire("moving");
     }
 
     private readonly getPageImage = (page: number) : Promise<fabric.Image>  => {
@@ -85,7 +86,9 @@ class PdfObject {
     private readonly updateImage = (newImage: fabric.Image) => {
         const pdfObj = this.object;
         const oldImage = this.image;
-        pdfObj.remove(oldImage);
+        const background = PdfObject.createBackgroundObjectFor(newImage);
+        pdfObj.remove(...pdfObj.getObjects());
+        pdfObj.addWithUpdate(background)
         pdfObj.addWithUpdate(newImage);
         this.image = newImage;
     }
@@ -114,7 +117,6 @@ class PdfObject {
     }
 
     private readonly setUpNextButton = () => {
-        console.log("setup button")
         if (this.nextButton) {
             return;
         }
@@ -129,8 +131,6 @@ class PdfObject {
                 width: rectWidth,
                 height: rectWidth,
                 fill: "red",
-                top: newPoint.y,
-                left: newPoint.x,
                 lockMovementY: true,
                 lockMovementX: true,
                 hasBorders: false,
@@ -138,15 +138,25 @@ class PdfObject {
                 perPixelTargetFind: false,
                 hoverCursor: "pointer",
                 selectable: true,
+                scaleX: pdfObj.scaleX || 1,
+                scaleY: pdfObj.scaleY || 1,
             });
+            button.rotate(pdfObj.angle || 0);
+            button.set({
+                top: newPoint.y,
+                left: newPoint.x,
+            })
             this.nextButton = button;
-            console.log("added");
             pdfObj.canvas.add(button);
             const calcPos = () => {
-                pdfObj.canvas?.remove(button);
-                button.off("mousedown", this.nextPage);
+                const pdfObjWidth = pdfObj.width || 0;
+                const pdfObjHeight = pdfObj.height || 0;
+                const rectWidth = pdfObjWidth * 0.06
+                const point = new fabric.Point(pdfObjWidth / 2 - rectWidth, -pdfObjHeight/2 - rectWidth * 1.25);
                 button.rotate(pdfObj.angle || 0);
                 button.set({
+                    height: rectWidth,
+                    width: rectWidth,
                     scaleX: pdfObj.scaleX || 1,
                     scaleY: pdfObj.scaleY || 1,
                 });
@@ -155,17 +165,20 @@ class PdfObject {
                     top: pos.y,
                     left: pos.x,
                 })
-                pdfObj.canvas?.add(button);
-                button.on("mousedown", this.nextPage);
-                pdfObj.canvas?.renderAll();
+                if (pdfObj.canvas) {
+                    pdfObj.canvas.remove(button);
+                    pdfObj.canvas.add(button);
+                }
             }
             pdfObj.on("rotating", calcPos);
             pdfObj.on("scaling", calcPos);
             pdfObj.on("moving", calcPos);
             pdfObj.on("skewing", calcPos);
 
-            button.on("mousedown", this.nextPage);
-
+            button.on("mousedown", ()=> {
+                this.nextPage();
+                pdfObj.canvas?.setActiveObject(pdfObj);
+            })
             const handleClickOutside = (e: IEvent) => {
                 if (this.mouseIn || e.target == button) {
                     return;
@@ -235,7 +248,7 @@ export default class PDFUtil {
                 reject(new Error("Попытка создания pdf из некорректного файла"));
             }
             const fileId = await this.putFileInStorageAndGetId(file);
-            let pdf : PdfAsImg = new PDFConverterBackend(fileId);
+            let pdf : PdfAsImg = new PDFConverterBackend (fileId);
 
             let pdfObj = await PdfObject.createPdfObject(pdf, {
                 uniboardData: {
@@ -274,7 +287,10 @@ export default class PDFUtil {
 
             let pdf : PdfAsImg = new PDFConverterBackend(object.uniboardData.data);
             let pdfObj = await PdfObject.createPdfObject(pdf, {uniboardData: object.uniboardData});
-            resolve(pdfObj.get())
+            const  obj = await pdfObj.get();
+            const {height, width, ...other} = object.toObject()
+            obj.set(other);
+            resolve(obj)
         });
     }
 }

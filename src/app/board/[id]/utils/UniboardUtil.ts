@@ -155,6 +155,17 @@ export default class UniboardUtil {
             }
         }
 
+        if (obj.uniboardData.type == "uniboard/pdf") {
+            const {height, width, ...other} = obj;
+            obj = other;
+            if (objOnCanvas) {
+                objOnCanvas.set(obj);
+                objOnCanvas.fire("moving");
+                this.canvas.renderAll();
+            }
+            return;
+        }
+
         if (objOnCanvas) {
             objOnCanvas.set(obj)
             this.canvas.renderAll();
