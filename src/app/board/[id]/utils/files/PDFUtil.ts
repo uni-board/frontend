@@ -247,7 +247,7 @@ export default class PDFUtil {
                 reject(new Error("Попытка создания pdf из некорректного файла"));
             }
             const fileId = await this.putFileInStorageAndGetId(file);
-            let pdf : PdfAsImg = new PDFConverterService(fileId);
+            let pdf : PdfAsImg = await PDFConverterService.convert(fileId);
 
             let pdfObj = new PdfObject(pdf, {
                 uniboardData: {
@@ -284,7 +284,7 @@ export default class PDFUtil {
                 return;
             }
 
-            let pdf : PdfAsImg = new PDFConverterService(object.uniboardData.data);
+            let pdf : PdfAsImg = await PDFConverterService.convert(object.uniboardData.data);
             let pdfObj = new PdfObject(pdf, {uniboardData: object.uniboardData});
             resolve(pdfObj.get())
         });
