@@ -52,14 +52,15 @@ export default abstract class Button {
     }
 
     private trackClickOnButton = () : void => {
-        if (this.onclick) {
-            this.button.on("mousedown", this.onclick);
-        }
-        this.canvas.setActiveObject(this.parent);
+        this.button.on("mousedown", (e) => {
+            if (this.onclick) {
+                this.onclick(e);
+            }
+            this.canvas.setActiveObject(this.parent);
+        })
     }
 
     public add = () : void => {
-        console.log("added");
         this.canvas.add(this.button);
         this.onCanvas = true;
     }
