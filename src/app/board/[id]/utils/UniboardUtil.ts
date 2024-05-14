@@ -177,6 +177,7 @@ export default class UniboardUtil {
         let objOnCanvas = this.canvas.getObjects().find((value ) => value.uniboardData.id === id);
         if (objOnCanvas) {
             this.canvas.remove(objOnCanvas);
+            objOnCanvas.fire("deleted")
             this.canvas.renderAll();
         }
     }

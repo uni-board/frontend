@@ -15,6 +15,7 @@ export default abstract class Button {
         this.updateSizeWithAngleAndMove();
         this.trackParentModifications();
         this.trackClickOnButton();
+        this.trackDeleteParent();
     }
 
     protected updateSizeWithAngleAndMove = () : void => {
@@ -57,6 +58,12 @@ export default abstract class Button {
                 this.onclick(e);
             }
             this.canvas.setActiveObject(this.parent);
+        })
+    }
+
+    private trackDeleteParent = () : void => {
+        this.parent.on("deleted", ()=> {
+            this.remove();
         })
     }
 
