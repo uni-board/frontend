@@ -4,6 +4,7 @@ import PdfAsImg from "@/app/board/[id]/utils/helpers/pdf-as-img/PdfAsImg";
 import PDFConverterBackend from "@/app/board/[id]/utils/helpers/pdf-as-img/PDFConverterBackend";
 import {v4 as uuidv4} from "uuid";
 import {PdfObject} from "@/app/board/[id]/utils/files/pdf/PdfObject";
+import PDFConverterService from "@/app/board/[id]/utils/helpers/pdf-as-img/PDFConverterService";
 
 
 export default class PDFUtil {
@@ -16,7 +17,7 @@ export default class PDFUtil {
                 reject(new Error("Попытка создания pdf из некорректного файла"));
             }
             const fileId = await this.putFileInStorageAndGetId(file);
-            let pdf : PdfAsImg = new PDFConverterBackend (fileId);
+            let pdf : PdfAsImg = await PDFConverterService.convert(fileId);
 
             let pdfObj = await PdfObject.createPdfObject(pdf, {
                 uniboardData: {
@@ -53,7 +54,7 @@ export default class PDFUtil {
                 return;
             }
 
-            let pdf : PdfAsImg = new PDFConverterBackend(object.uniboardData.data);
+            let pdf : PdfAsImg = await PDFConverterService.convert(object.uniboardData.data);
             let pdfObj = await PdfObject.createPdfObject(pdf, {uniboardData: object.uniboardData});
             const  obj = await pdfObj.get();
             const {height, width, ...other} = object.toObject()
