@@ -11,7 +11,7 @@ import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
 import StickyNoteUtil from "@/app/board/[id]/utils/files/StickyNoteUtil";
 import {Dispatch, SetStateAction} from "react";
 import ToolsOptions from "@/app/board/[id]/utils/options/ToolsOptions";
-import PDFUtil from "@/app/board/[id]/utils/files/PDFUtil";
+import PDFUtil from "@/app/board/[id]/utils/files/pdf/PDFUtil";
 
 export default class UniboardUtil {
     private readonly id : string;
