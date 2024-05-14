@@ -11,6 +11,7 @@ import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
 import StickyNoteUtil from "@/app/board/[id]/utils/files/StickyNoteUtil";
 import {Dispatch, SetStateAction} from "react";
 import ToolsOptions from "@/app/board/[id]/utils/options/ToolsOptions";
+import PDFUtil from "@/app/board/[id]/utils/files/pdf/PDFUtil";
 
 export default class UniboardUtil {
     private readonly id : string;
@@ -156,6 +157,17 @@ export default class UniboardUtil {
             }
         }
 
+        if (obj.uniboardData.type == "uniboard/pdf") {
+            const {height, width, ...other} = obj;
+            obj = other;
+            if (objOnCanvas) {
+                objOnCanvas.set(obj);
+                objOnCanvas.fire("moving");
+                this.canvas.renderAll();
+            }
+            return;
+        }
+
         if (objOnCanvas) {
             objOnCanvas.set(obj)
             this.canvas.renderAll();
@@ -167,6 +179,7 @@ export default class UniboardUtil {
         let objOnCanvas = this.canvas.getObjects().find((value ) => value.uniboardData.id === id);
         if (objOnCanvas) {
             this.canvas.remove(objOnCanvas);
+            objOnCanvas.fire("deleted")
             this.canvas.renderAll();
         }
     }
@@ -235,6 +248,10 @@ export default class UniboardUtil {
 
                 if (obj.uniboardData.type == "uniboard/stickyNote") {
                     obj = await StickyNoteUtil.enlivenFromObject(obj);
+                }
+
+                if (obj.uniboardData.type == "uniboard/pdf") {
+                    obj = await PDFUtil.enlivenFromObject(obj);
                 }
 
                 if (this.canvas.getContext()) {

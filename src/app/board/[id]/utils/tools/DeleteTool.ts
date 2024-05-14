@@ -22,6 +22,7 @@ export default class DeleteTool extends AbstractTool implements AlwaysActiveTool
             this.canvas.discardActiveObject();
             objects.forEach((obj) => {
                 this.socketController.objectRemoved(obj);
+                obj.fire("deleted");
             })
         }
     }

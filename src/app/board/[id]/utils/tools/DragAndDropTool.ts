@@ -8,6 +8,7 @@ import UniboardData from "@/app/board/[id]/utils/tools/UniboardData";
 import SVGUtil from "@/app/board/[id]/utils/files/SVGUtil";
 import ImageUtil from "@/app/board/[id]/utils/files/ImageUtil";
 import FilesUtil from "@/app/board/[id]/utils/files/FilesUtil";
+import PDFUtil from "@/app/board/[id]/utils/files/pdf/PDFUtil";
 
 export default class DragAndDropTool extends AbstractTool implements AlwaysActiveTool {
 
@@ -54,6 +55,11 @@ export default class DragAndDropTool extends AbstractTool implements AlwaysActiv
             case 'image/png': {
                 obj = await ImageUtil.createFromFile(file);
                 break
+            }
+            case 'application/pdf': {
+                obj = await PDFUtil.createFromFile(file);
+                console.log("pdf created");
+                break;
             }
             default: {
                 obj = await FilesUtil.createFromFile(file);
