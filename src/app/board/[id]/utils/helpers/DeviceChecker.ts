@@ -2,7 +2,7 @@ export default class DeviceChecker {
 
     private readonly maxMobile = 600;
     getOSType = () : OSType => {
-        if (window) {
+        if (typeof window !== "undefined") {
             if (window.navigator.userAgent.indexOf("Windows NT 10.0")!= -1) return OSType.Windows;
             if (window.navigator.userAgent.indexOf("Windows NT 6.3") != -1) return OSType.Windows;
             if (window.navigator.userAgent.indexOf("Windows NT 6.2") != -1) return OSType.Windows;
@@ -18,7 +18,7 @@ export default class DeviceChecker {
     }
 
     isMobile = () : boolean => {
-        if (!window) {
+        if (typeof window == "undefined") {
             return false;
         }
         return window.innerWidth < this.maxMobile;
