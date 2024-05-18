@@ -28,7 +28,7 @@ export default class SVGUtil {
                     if (svgObject instanceof fabric.Group) {
                         const formData = new FormData();
                         formData.append("somefile", file);
-                        let response = await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/storage/add`,
+                        let response = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/storage/add`,
                             {
                                 method: "POST",
                                 body: formData,
@@ -75,7 +75,7 @@ export default class SVGUtil {
                 return;
             }
 
-            let res = await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/storage/${object.uniboardData.data}`, {
+            let res = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/storage/${object.uniboardData.data}`, {
                 method: "GET",
             });
 

@@ -18,7 +18,7 @@ export default class FilesUtil {
             const formData = new FormData();
             formData.append("somefile", file);
 
-            let response = await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/storage/add`,
+            let response = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/storage/add`,
                 {
                     method: "POST",
                     body: formData,
@@ -95,7 +95,7 @@ export default class FilesUtil {
                         throw new Error("Некорректный элемент: отсутсвует или некорректная uniboardData.")
                     }
 
-                    let blob = await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/storage/${e.target.uniboardData.data}`, {
+                    let blob = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/storage/${e.target.uniboardData.data}`, {
                         method: "GET",
                     }).then((value) => value.blob());
 

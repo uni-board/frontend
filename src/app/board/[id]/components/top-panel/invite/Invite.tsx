@@ -10,7 +10,7 @@ export default function Invite({id} : {id: string}) {
 
     let [inviteMenuActive, setInviteMenuActive] = useState(false);
     let [copied, setCopied] = useState(false);
-    let link : string = `http://${process.env["NEXT_PUBLIC_CLIENT_HOST"]}:${process.env["NEXT_PUBLIC_CLIENT_PORT"]}/board/${id}`;
+    let link : string = `${process.env["NEXT_PUBLIC_CLIENT_URL"]}/board/${id}`;
 
     return (
         <>

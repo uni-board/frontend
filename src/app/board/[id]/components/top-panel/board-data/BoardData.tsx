@@ -14,7 +14,9 @@ export default function BoardData({style, id, exportAsImage} : {style?: React.CS
 
     let [name, setName] = useState("");
     let [description, setDescription] = useState("");
-    fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/board/${id}/settings`)
+    fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/board/${id}/settings`, {
+        method: "GET",
+    })
         .then((response) => {
             return  response.json();
         })

@@ -36,8 +36,9 @@ export default class PDFConverterBackend implements PdfAsImg {
 
     private async loadPage(pageId: string) : Promise<HTMLImageElement> {
         return new Promise(async (resolve, reject) => {
-            const res =  await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/storage/${pageId}`, {
+            const res =  await fetch(`https://${process.env["NEXT_PUBLIC_API_HOST"]}/storage/${pageId}`, {
                 method: "GET",
+                mode: "no-cors"
             });
             let blob = await res.blob();
             const reader = new FileReader();
@@ -84,7 +85,7 @@ export default class PDFConverterBackend implements PdfAsImg {
     }
 
     private async loadPagesData()  {
-        const res = await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/pdf/split?id=${this.pdfId}`, {
+        const res = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/pdf/split?id=${this.pdfId}`, {
             method: "POST",
         });
         let data : string[] = await res.json();

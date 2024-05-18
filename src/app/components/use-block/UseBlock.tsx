@@ -14,12 +14,12 @@ export default function UseBlock() {
     let [boardDescription, setBoardDescription] = useState("");
 
     const createBoard = async () => {
-        let res = fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/createboard`, {
+        let res = fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/createboard`, {
             method: "POST",
         })
             .then((response) => response.json())
             .then( async (data) => {
-                await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/board/${data.id}/settings/edit`, {
+                await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/board/${data.id}/settings/edit`, {
                     method: "PUT",
                     body: JSON.stringify({name: boardName, description: boardDescription}),
                 });

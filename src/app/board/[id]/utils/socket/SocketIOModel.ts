@@ -7,7 +7,7 @@ export default class SocketIOModel implements ClientToServerEvents{
     private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
     constructor(eventsFromServerHandlers: ServerToClientEvents) {
-        this.socket = io(`${process.env.NEXT_PUBLIC_SOCKET_HOST}:${process.env.NEXT_PUBLIC_SOCKET_PORT}`);
+        this.socket = io(`${process.env.NEXT_PUBLIC_SOCKET_URL}`);
         this.setEventHandlers(eventsFromServerHandlers);
     }
 

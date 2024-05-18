@@ -216,7 +216,7 @@ export default class UniboardUtil {
     }
 
     public loadObjects() {
-        fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/board/${this.id}/get`, {
+        fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/board/${this.id}/get`, {
             method: 'GET',
         }).then( (response) => {
             return response.json();

@@ -37,7 +37,7 @@ export default class PDFUtil {
         return new Promise( async (resolve, reject) => {
             const formData = new FormData();
             formData.append("somefile", file);
-            let response = await fetch(`http://${process.env["NEXT_PUBLIC_API_HOST"]}:${process.env["NEXT_PUBLIC_API_PORT"]}/storage/add`,
+            let response = await fetch(`${process.env["NEXT_PUBLIC_API_URL"]}/storage/add`,
                 {
                     method: "POST",
                     body: formData,
