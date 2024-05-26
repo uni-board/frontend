@@ -29,7 +29,7 @@ export default class PDFConverterService implements PdfAsImg {
 
     private static async loadData(pdfId: string) : Promise<{totalPages: number, images: Promise<HTMLImageElement>[]}> {
         const start = new Date().getTime();
-        const res = await fetch(`http://localhost:3021/parse/stream?id=${pdfId}`, {
+        const res = await fetch(`${process.env["NEXT_PUBLIC_CONVERTER_URL"]}/parse/stream?id=${pdfId}`, {
             method: "GET",
             headers: {
                 "Access-Control-Request-Headers": "X-Total-Pages",
